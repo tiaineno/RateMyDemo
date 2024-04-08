@@ -1,0 +1,32 @@
+<a href="/"><img src="../static/kuvat/logo.png" alt="RMD logo"
+    width="20"
+    height="20"></a> 
+<a href="/">RateMyDemo</a>&emsp; &emsp;
+{% if session.id %}
+<a href="/account"><img src="/show/pfp/{{ session.id }}" alt="Kuva"
+    width="20"
+    height="20"/></a>
+<a href="/account">{{session.username}}</a>&emsp; &emsp;
+<a href="/upload">Julkaise</a>&emsp; &emsp;
+{% else %}
+<a href="/login">Kirjaudu sisään</a>
+{% endif %}
+<hr>
+<title>Kaikki julkaisut</title>
+<h1>Kaikki julkaisut</h1>
+
+Järjestä: <a href="/releases/rating_desc">Pisteet (paras ensin)</a>
+Järjestä: <a href="/releases/rating_asc">Pisteet (huonoin ensin)</a>
+Järjestä: <a href="/releases/id_desc">Julkaisupäivä (uusin ensin)</a>
+Järjestä: <a href="/releases/id_asc">Julkaisupäivä (vanhin ensin)</a>
+Järjestä: <a href="/releases/title">Nimi (nouseva)</a>
+Järjestä: <a href="/releases/title_desc">Nimi (laskeva)</a>
+<hr>
+{% for r in data %}
+<img src="/show/cover/{{ r.id }}" alt="Kuva"
+width="50"
+height="50"/>
+<a href="/release/{{r.id}}">{{r.title}} käyttäjältä {{r.username}}</a><br>
+Pisteet: {{r.rating|round(1)}}/10 <p>
+{% endfor %} <hr>
+

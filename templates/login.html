@@ -1,0 +1,24 @@
+<a href="/"><img src="static/kuvat/logo.png" alt="RMD logo"
+    width="20"
+    height="20"></a> 
+<a href="/">RateMyDemo</a>&emsp; &emsp;
+<a href="/account"><img src="/show/pfp/{{ session.id }}" alt="Kuva"
+    width="20"
+    height="20"/></a>
+<a href="/account">{{session.username}}</a>&emsp; &emsp;
+<a href="/upload">Julkaise</a>&emsp; &emsp;
+<hr>
+<title>Kirjaudu sisään</title>
+<h1>Kirjaudu sisään</h1>
+
+{%if v%}
+Väärä käyttäjätunnus tai salasana!
+{%endif%}
+
+<form action="/login2" method="POST">
+    <p>Tunnus:<br>
+    <input type="text" name="username"></p>
+    <p>Salasana:<br>
+    <input type="password" name="password"></p>
+    <input type="submit" value="Kirjaudu">
+    </form>

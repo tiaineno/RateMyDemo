@@ -1,0 +1,47 @@
+<a href="/"><img src="static/kuvat/logo.png" alt="RMD logo"
+    width="20"
+    height="20"></a> 
+<a href="/">RateMyDemo</a>&emsp; &emsp;
+<a href="/account"><img src="/show/pfp/{{ session.id }}" alt="Kuva"
+    width="20"
+    height="20"/></a>
+<a href="/account">{{session.username}}</a>&emsp; &emsp;
+<a href="/upload">Julkaise</a>&emsp; &emsp;
+<hr>
+
+<title>Oma tili</title>
+<h1>Oma tili</h1>
+
+{% if session.username %}
+<p>Olet kirjautunut nimellä {{ session.username }}</p>
+<img src="/show/pfp/{{ session.id }}" alt="Kuva"
+width="200"
+height="200"/>
+</p>
+Vaihda kuva:
+<form action="/change_pfp" method="POST" enctype="multipart/form-data">
+    File: <input type="file" name="file">
+    <input type="submit" value="Send">
+    </form>
+
+</p>
+<a href="/logout">Kirjaudu ulos</a> <hr>
+Omat lataukset: <br>
+{% for r in result %}
+{{ r.title }} <br>
+<img src="/show/cover/{{ r.id }}" alt="Kuva"
+width="100"
+height="100"/> <br>
+<a href="/release/{{ r.id }}">Siirry julkaisuun</a> <br> <br>
+{% endfor %} <hr>
+<a href="/Library">Näytä kaikki</a> </p>
+Omat arvostelut: <br>
+TODO <br>
+<a href="/reviews">Näytä kaikki</a> </p>
+Omat pisteytykset: <br>
+TODO <br>
+<a href="/ratings">Näytä kaikki</a>
+{% else %}
+Et ole kirjautunut sisään
+<a href="/login">kirjaudu sisään</a>
+{% endif %}

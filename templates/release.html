@@ -1,0 +1,58 @@
+<a href="/"><img src="/static/kuvat/logo.png" alt="RMD logo"
+  width="20"
+  height="20"></a> 
+<a href="/">RateMyDemo</a>&emsp; &emsp;
+{% if session.id %}
+<a href="/account"><img src="/show/pfp/{{ session.id }}" alt="Kuva"
+    width="20"
+    height="20"/></a>
+<a href="/account">{{session.username}}</a>&emsp; &emsp;
+<a href="/upload">Julkaise</a>&emsp; &emsp;
+{% else %}
+<a href="/login">Kirjaudu sisään</a>
+{% endif %}
+<hr>
+<h1>Julkaisu</h1>
+
+Julkaisu {{title}} käyttäjältä {{user}} <br>
+<img src="/show/cover/{{id}}" alt="Kuva"
+width="200"
+height="200"/> <br>
+Genre: {{genre}} <br>
+Julkaistu: {{date}} <p>
+
+<audio controls>
+    <source src="/audio/{{id}}" type="audio/mp3">
+  Your browser does not support the audio element.
+  </audio>
+<p>
+
+{% if session.id %}
+Pisteytä: <br>
+<form action="/rate/{{id}}" method="POST">
+  <input type="range" value="5" name="rating" min="1" max="10" oninput="this.nextElementSibling.value = this.value">
+  <output>5</output>
+  <input type="submit" value="Tallenna">
+</form> <p>
+
+Arvostele: <br>
+<form action="/review/{{id}}" method="POST">
+    <textarea name="message" rows="5" cols="50"></textarea>
+    <input type="submit" value="Julkaise">
+    </form>
+{% else %}
+<a href="/login">Kirjaudu sisään</a> pisteyttääksesi ja arvostellaksesi julkaisuja.
+{% endif %}
+<hr>
+Pisteytysten keskiarvo: <br>
+{{ratings}} <p>
+Arvostelut: <br>
+{% for r in reviews %}
+<img src="/show/pfp/{{ r.id }}" alt="Kuva"
+width="50"
+height="50"/><br>
+{{ r.username }}:<br>
+<br>
+{{r.content}}
+<hr>
+{% endfor %} <br>

@@ -1,0 +1,24 @@
+<a href="/"><img src="static/kuvat/logo.png" alt="RMD logo"
+    width="20"
+    height="20"></a> 
+<a href="/">RateMyDemo</a>&emsp; &emsp;
+<a href="/account"><img src="/show/pfp/{{ session.id }}" alt="Kuva"
+    width="20"
+    height="20"/></a>
+<a href="/account">{{session.username}}</a>&emsp; &emsp;
+<a href="/upload">Julkaise</a>&emsp; &emsp;
+<hr>
+<title>Luo tili</title>
+<h1>Luo tili</h1>
+
+{{error}}
+
+<form action="/create_user2" method="POST" enctype="multipart/form-data">
+    <p>Tunnus:<br>
+    <input type="text" name="username"></p>
+    <p>Salasana:<br>
+    <input type="password" name="password"></p>
+    <p>Profiilikuva:</p>
+    <input type="file" name="file">
+    <input type="submit" value="Luo tili">
+    </form>
