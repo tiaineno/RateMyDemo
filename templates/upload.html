@@ -14,8 +14,12 @@
 <hr>
 <title>Julkaise</title>
 <h1>Julkaise</h1>
+<br>
+{% if error %}
+Syötä kaikki tiedot!
+{% endif %}
 
-<form action="/upload2" method="POST" enctype="multipart/form-data">
+<form action="/upload" method="POST" enctype="multipart/form-data">
     <p>Julkaisun nimi:<br>
     <input type="text" name="title"></p>
     <p>Genre:<br>
