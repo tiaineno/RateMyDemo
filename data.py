@@ -88,3 +88,11 @@ def rate(id, rating):
         sql = text("INSERT INTO ratings (rating, user_id, release_id) VALUES (:rating, :user_id, :release_id)")
     db.session.execute(sql, {"rating":rating, "user_id":session["id"], "release_id":id})
     db.session.commit()
+
+def search(query, order="id"):
+    sql = text(f"""SELECT AVG(RA.rating) as rating, U.username as username, R.id as id, R.title as title
+               FROM releases R LEFT JOIN users U ON R.user_id = U.id LEFT JOIN ratings RA ON RA.release_id=R.id
+               WHERE RA.rating IS NOT NULL AND (title ILIKE :q OR username ILIKE :q) GROUP BY R.id, U.username, R.title ORDER BY {order}""")
+    query = f"%{query}%"
+    release_data = db.session.execute(sql, {"q":query})
+    return release_data

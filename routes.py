@@ -120,3 +120,10 @@ def releases(order):
     order = order.replace("_", " ")
     releases_data = data.releases(order, 1000000)
     return render_template("/releases.html", data=releases_data)
+
+
+@app.route("/releases/search/", methods = ["POST"])
+def search():
+    query = request.form["query"]
+    releases_data = data.search(query)
+    return render_template("/search.html", data=releases_data)

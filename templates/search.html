@@ -1,4 +1,4 @@
-<a href="/"><img src="../static/kuvat/logo.png" alt="RMD logo"
+<a href="/"><img src="/static/kuvat/logo.png" alt="RMD logo"
     width="20"
     height="20"></a> 
 <a href="/">RateMyDemo</a>&emsp; &emsp;
@@ -12,14 +12,16 @@
 <a href="/login">Kirjaudu sisään</a>
 {% endif %}
 <hr>
-<title>Kaikki julkaisut</title>
-<h1>Kaikki julkaisut</h1>
+<title>Haun tulokset</title>
+<h1>Haun tulokset</h1>
 <form action="/releases/search" method="POST">
     <p>Hae julkaisuja:<br>
     <input type="text" name="query"></p>
     <input type="submit" value="Hae">
     </form>
+<a href="/releases">Kaikki julkaisut</a>
 
+KORJAA NÄMÄ: <br>
 Järjestä: <a href="/releases/rating_desc">Pisteet (paras ensin)</a>
 Järjestä: <a href="/releases/rating_asc">Pisteet (huonoin ensin)</a>
 Järjestä: <a href="/releases/id_desc">Julkaisupäivä (uusin ensin)</a>
@@ -34,4 +36,3 @@ height="50"/>
 <a href="/release/{{r.id}}">{{r.title}} käyttäjältä {{r.username}}</a><br>
 Pisteet: {{r.rating|round(1)}}/10 <p>
 {% endfor %} <hr>
-
