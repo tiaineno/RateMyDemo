@@ -37,8 +37,7 @@ def register():
     if request.method == "POST":
         username = request.form["username"]
         password = request.form["password"]
-        file = request.form["file"]
-
+        file = request.files["file"]
         if users.register(username, password, file):
             return redirect("/account")
         else:
