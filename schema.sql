@@ -1,7 +1,7 @@
 CREATE TABLE users (
     id SERIAL PRIMARY KEY,
-    name TEXT,
-    password TEXT
+    username TEXT,
+    password TEXT,
     data bytea
 );
 
@@ -27,9 +27,4 @@ CREATE TABLE ratings (
     user_id INTEGER REFERENCES users,
     release_id INTEGER REFERENCES releases,
     rating INTEGER
-);
-
-CREATE TABLE genres (
-    id SERIAL PRIMARY KEY,
-    name TEXT
 );
