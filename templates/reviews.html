@@ -1,0 +1,32 @@
+<a href="/"><img src="static/kuvat/logo.png" alt="RMD logo"
+    width="20"
+    height="20"></a> 
+<a href="/">RateMyDemo</a>&emsp; &emsp;
+<a href="/account"><img src="/show/pfp/{{ session.id }}" alt="Kuva"
+    width="20"
+    height="20"/></a>
+<a href="/account">{{session.username}}</a>&emsp; &emsp;
+<a href="/upload">Julkaise</a>&emsp; &emsp;
+<hr>
+
+<title>Omat arvostelut</title>
+<h1>Omat arvostelut</h1>
+
+{% if session.username %}
+{% for item in reviews %}
+<a href=""><img src="/show/cover/{{item.id}}" alt="Kuva"
+width="50"
+height="50"/></a>
+Julkaisun <a href="/release/{{item.id}}">{{ item.title }}</a> arvostelusi: </br>
+{{ item.content }} <br>
+<form action="/delete_review" method="post">
+    <input type="hidden" name="id" value={{item.review_id}} />
+    <input type="submit" value="Poista" />
+</form>
+<hr>
+{% endfor %}
+
+{% else %}
+<a href="/login">Kirjaudu sisään</a> tai
+<a href="/create_user">Luo tili</a>
+{% endif %}

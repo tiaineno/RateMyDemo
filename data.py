@@ -25,9 +25,23 @@ def ratings(id):
         ratings = "Ei pisteytyksiä"
     return ratings
 
-def reviews(condition, id):
+def reviews(release_id, user_id = None):
     sql = text(f"""SELECT R.content as content, R.sent_at as sent_at, R.user_id as id, U.username as username
-               FROM reviews R, users U WHERE {condition} = :id AND R.user_id = U.id""")
+               FROM reviews R, users U WHERE R.release_id = :id AND R.user_id = U.id AND R.user_id <> :user_id""")
+    reviews = db.session.execute(sql, {"id":release_id, "user_id":user_id})
+    reviews = reviews.fetchall()
+
+    review = None
+    if user_id:
+        sql = text(f"""SELECT R.content as content, R.sent_at as sent_at
+                FROM reviews R WHERE R.user_id = :user_id AND R.release_id = :release_id""")
+        review = db.session.execute(sql, {"user_id":user_id, "release_id":release_id})
+        review = review.fetchone()
+    return (reviews,review)
+
+def reviews2(id):
+    sql = text(f"""SELECT R.content as content, R.sent_at as sent_at, R.id as review_id, R.release_id as id, Re.title as title
+               FROM reviews R, releases Re WHERE R.user_id = :id AND R.release_id = Re.id""")
     reviews = db.session.execute(sql, {"id":id})
     reviews = reviews.fetchall()
     return reviews
@@ -77,6 +91,11 @@ def review(content, id):
         db.session.execute(sql, {"user_id":session["id"], "id":id})
     sql = text("INSERT INTO reviews (content, user_id, release_id) VALUES (:content, :user_id, :release_id)")
     db.session.execute(sql, {"content":content, "user_id":session["id"], "release_id":id})
+    db.session.commit()
+
+def delete_review(id):
+    sql = text("DELETE FROM reviews WHERE id = :id")
+    db.session.execute(sql, {"id": id})
     db.session.commit()
 
 def rate(id, rating):

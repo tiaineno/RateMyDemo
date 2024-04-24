@@ -18,7 +18,6 @@ Julkaisu {{title}} käyttäjältä {{user}} <br>
 <img src="/show/cover/{{id}}" alt="Kuva"
 width="200"
 height="200"/> <br>
-Genre: {{genre}} <br>
 Julkaistu: {{date}} <p>
 
 <audio controls>
@@ -34,7 +33,11 @@ Pisteytä: <br>
   <output>5</output>
   <input type="submit" value="Tallenna">
 </form> <p>
-
+{% if review.content %}
+Arvostelusi: <br>
+{{review.content}}
+<hr>
+{% endif %}
 Arvostele: <br>
 <form action="/review/{{id}}" method="POST">
     <textarea name="message" rows="5" cols="50"></textarea>

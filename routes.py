@@ -90,9 +90,15 @@ def audio(id):
 @app.route("/release/<int:id>")
 def release(id):
     release_data = data.release(id)
-    reviews = data.reviews("R.release_id",id)
+    user_id = None
+    if "id" in session:
+        user_id = session["id"]
+    reviews = data.reviews(id, user_id)
+    review = reviews[1]
+    print(review)
+    reviews = reviews[0]
     ratings = data.ratings(id)
-    return render_template("/release.html", id=id, title=release_data.title, genre=release_data.genre, user=release_data.username, reviews=reviews, ratings=ratings)
+    return render_template("/release.html", id=id, title=release_data.title, genre=release_data.genre, user=release_data.username, reviews=reviews, ratings=ratings, review=review)
 
 #adds the new review to the database
 @app.route("/review/<int:id>", methods = ["POST"])
@@ -126,3 +132,17 @@ def search():
     query = request.form["query"]
     releases_data = data.search(query)
     return render_template("/search.html", data=releases_data)
+
+@app.route("/account/reviews/")
+def reviews():
+    reviews_data = None
+    if "id" in session:
+        user_id = session["id"]
+        reviews_data = data.reviews2(user_id)
+    return render_template("/reviews.html", reviews=reviews_data)
+
+@app.route("/delete_review/", methods = ["POST"])
+def delete_review():
+    review_id = request.form["id"]
+    data.delete_review(review_id)
+    return redirect("/account/reviews/")
