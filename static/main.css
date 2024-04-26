@@ -1,3 +1,8 @@
+a {
+    color:white;
+    text-decoration: none;
+}
+
 body {
     margin: auto;
     max-width: 45em;
@@ -29,6 +34,7 @@ nav li a {
 nav li a img {
     vertical-align: middle;
     margin-right: 5px;
+    margin-left: 5px;
 }
 
 nav li a span {
@@ -68,3 +74,42 @@ nav li a:hover {
 h1{
     color:white;
 }
+
+.left{
+    margin-right: 10px;
+    vertical-align: middle;
+    flex-basis: 25%;
+}
+.right{
+    flex-basis: 75%;
+
+}
+
+releases ul{
+    list-style-type: none;
+    margin-left:0px;
+    padding-left:0px;
+    display: inline-block;
+}
+
+releases ul li{
+    float: left;
+    width: 50%;
+    margin: 10px 0;
+}
+
+releases li a {
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+
+nav li a img {
+    vertical-align: middle;
+    float:left;
+}
+
+
+

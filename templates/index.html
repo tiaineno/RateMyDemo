@@ -4,34 +4,48 @@
 <title>Etusivu</title>
 <h1>Etusivu</h1>
 
-<div class="content">
-    Tervetuloa RateMyDemoon! <br>
+<div class="container">
+    <div class="left">
+        {% if session.username %}
+        Hei {{session.username}} <br>
+        Tervetuloa <br>
+        RateMyDemoon! <br> <br>
 
-    <img src="static/kuvat/logo.png" alt="RMD logo"
-    width="100"
-    height="100"> <br>
-    {% if session.username %}
-    <img src="/show/pfp/{{ session.id }}" alt="Kuva"
-    width="50"
-    height="50"/>
-    <a href="/account">Oma tili</a> <br>
-    <a href="/upload">Uusi julkaisu</a> <br>
-    {% else %}
-    <a href="/login">kirjaudu sisään</a> <br>
-    <a href="/create_user">luo tili</a> <br>
-    {% endif %}
-    <hr>
+        <img src="/show/pfp/{{ session.id }}" alt="Kuva"
+        width="80"
+        height="80"/>
+        {% else %}
+        Tervetuloa <br>
+        RateMyDemoon! <br> <br>
+        <a href="/login">kirjaudu sisään</a> <br>
+        <a href="/create_user">luo tili</a> <br>
+        {% endif %}
+    </div>
+    <div class="right">
+        <img src="static/kuvat/logo.png" alt="RMD logo"
+        width="150"
+        height="150">
+    </div>
 </div>  
+<hr>
 
 <div class="container">
     <div class="popular-releases">
         <h2>Suosituimmat julkaisut:</h2>
         {% for r in most_popular %}
-        <div>
-            <img src="/show/cover/{{ r.id }}" alt="Kuva">
-            <a href="/release/{{r.id}}">{{r.title}} käyttäjältä {{r.username}}</a><br>
-            Pisteet: {{r.rating|round(1)}}/10 <br>
+        <div class="container">
+            <div class="left">
+                <img src="/show/cover/{{ r.id }}" alt="Kuva"> <br>
+            </div>
+            <div class="right">
+                <a href="/release/{{r.id}}">{{r.title}} käyttäjältä {{r.username}}</a><br>
+            </div>
+            {% if r.rating %}
         </div>
+        Pisteet: {{r.rating|round(1)}}/10 <br>
+        {% else %}
+        Ei pisteytetty <br>
+        {% endif %} <hr>
         {% endfor %}
         <a href="/releases">Näytä kaikki</a>
     </div>
@@ -39,12 +53,21 @@
     <div class="new-releases">
         <h2>Uusimmat julkaisut:</h2>
         {% for r in releases %}
-        <div>
-            <img src="/show/cover/{{ r.id }}" alt="Kuva">
-            <a href="/release/{{r.id}}">{{r.title}} käyttäjältä {{r.username}}</a><br>
+        <div class = "container">
+            <div class="left">
+                <img src="/show/cover/{{ r.id }}" alt="Kuva">
+            </div>
+            <div class="right">
+                <a href="/release/{{r.id}}">{{r.title}}<br>käyttäjältä {{r.username}}</a><br>
+            </div>
         </div>
+        {% if r.rating %}
+        Pisteet: {{r.rating|round(1)}}/10 <br>
+        {% else %}
+        Ei pisteytetty <br>
+        {% endif %} <hr>
         {% endfor %}
-        <a href="/releases">Näytä kaikki</a>
+        <a href="/releases">Näytä kaikki</a> <br>
     </div>
 </div>
 
