@@ -20,8 +20,12 @@ Järjestä: <a href="/releases/title_desc">Nimi (laskeva)</a>
 <img src="/show/cover/{{ r.id }}" alt="Kuva"
 width="50"
 height="50"/>
-<a href="/release/{{r.id}}">{{r.title}} käyttäjältä {{r.username}}</a><br>
-Pisteet: {{r.rating|round(1)}}/10 <p>
+<a href="/release/{{r.id}}">{{r.title}} käyttäjältä {{r.username}}</a> <br>
+{% if r.rating %}
+Pisteet: {{r.rating|round(1)}}/10 <br>
+{% else %}
+Ei pisteytetty <br>
+{% endif %}
 {% endfor %} <hr>
 
 {% endblock %}

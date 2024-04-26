@@ -2,11 +2,23 @@ from sqlalchemy.sql import text
 from db import db
 from flask import make_response, session
 
-def releases(order, limit, condition = "", id = None):
+def releases(limit, order, order2=""):
+    if order not in ("id", "rating", "title"):
+        order = "id"
+    if order2 not in ("ASC", "DESC", "asc", "desc"):
+        order2 = ""
+    
     sql = text(f"""SELECT AVG(RA.rating) as rating, U.username as username, R.id as id, R.title as title
                FROM releases R LEFT JOIN users U ON R.user_id = U.id LEFT JOIN ratings RA ON RA.release_id=R.id
-               WHERE RA.rating IS NOT NULL {condition} GROUP BY R.id, U.username, R.title ORDER BY {order} LIMIT :limit""")
-    releases_data = db.session.execute(sql, {"limit":limit, "id":id})
+               GROUP BY R.id, U.username, R.title ORDER BY {order} {order2} NULLS LAST LIMIT :limit""")
+    releases_data = db.session.execute(sql, {"limit":limit})
+    return releases_data
+
+def own_releases(id, limit=999999, order="id", order2=""):
+    sql = text(f"""SELECT AVG(RA.rating) as rating, R.id as id, R.title as title
+               FROM releases R LEFT JOIN ratings RA ON RA.release_id=R.id WHERE R.user_id = :id
+               GROUP BY R.id, R.title ORDER BY {order} {order2} NULLS LAST LIMIT :limit""")
+    releases_data = db.session.execute(sql, {"id":id, "limit":limit})
     return releases_data
 
 def release(id):

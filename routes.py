@@ -5,8 +5,8 @@ import data, users
 #returns the home page
 @app.route("/")
 def index():
-    most_popular = data.releases("rating DESC", 3)
-    most_recent = data.releases("id DESC", 3)
+    most_popular = data.releases(3, "rating", "desc")
+    most_recent = data.releases(3, "id", "desc")
     return render_template("index.html", releases=most_recent, most_popular=most_popular)
 
 #returns the login page or handles the user login
@@ -49,7 +49,7 @@ def account():
     id = None
     if "id" in session:
         id = session["id"]
-    result = data.releases("id", 3, f"AND R.user_id = :id", id)
+    result = data.own_releases(id, 3)
     return render_template("/account.html", result=result)
 
 #returns a profile picture(/pfp) or an album cover(/cover) based on given id
@@ -122,8 +122,10 @@ def releases_null():
 #returns the page with all releases sorted by given parameter
 @app.route("/releases/<string:order>")
 def releases(order):
-    order = order.replace("_", " ")
-    releases_data = data.releases(order, 1000000)
+    order = order.split("_")
+    if len(order) < 2:
+        order = [order[0], None]
+    releases_data = data.releases(1000, order[0], order[1])
     return render_template("/releases.html", data=releases_data)
 
 
