@@ -1,13 +1,5 @@
-<a href="/"><img src="static/kuvat/logo.png" alt="RMD logo"
-    width="20"
-    height="20"></a> 
-<a href="/">RateMyDemo</a>&emsp; &emsp;
-<a href="/account"><img src="/show/pfp/{{ session.id }}" alt="Kuva"
-    width="20"
-    height="20"/></a>
-<a href="/account">{{session.username}}</a>&emsp; &emsp;
-<a href="/upload">Julkaise</a>&emsp; &emsp;
-<hr>
+{% extends "layout.html" %}
+{% block content %}
 
 <title>Omat arvostelut</title>
 <h1>Omat arvostelut</h1>
@@ -30,3 +22,5 @@ Julkaisun <a href="/release/{{item.id}}">{{ item.title }}</a> arvostelusi: </br>
 <a href="/login">Kirjaudu sisään</a> tai
 <a href="/create_user">Luo tili</a>
 {% endif %}
+
+{% endblock %}

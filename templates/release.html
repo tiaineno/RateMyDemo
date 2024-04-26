@@ -1,17 +1,6 @@
-<a href="/"><img src="/static/kuvat/logo.png" alt="RMD logo"
-  width="20"
-  height="20"></a> 
-<a href="/">RateMyDemo</a>&emsp; &emsp;
-{% if session.id %}
-<a href="/account"><img src="/show/pfp/{{ session.id }}" alt="Kuva"
-    width="20"
-    height="20"/></a>
-<a href="/account">{{session.username}}</a>&emsp; &emsp;
-<a href="/upload">Julkaise</a>&emsp; &emsp;
-{% else %}
-<a href="/login">Kirjaudu sisään</a>
-{% endif %}
-<hr>
+{% extends "layout.html" %}
+{% block content %}
+
 <h1>Julkaisu</h1>
 
 Julkaisu {{title}} käyttäjältä {{user}} <br>
@@ -59,3 +48,5 @@ height="50"/><br>
 {{r.content}}
 <hr>
 {% endfor %} <br>
+
+{% endblock %}

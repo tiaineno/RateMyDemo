@@ -1,0 +1,29 @@
+<link rel="stylesheet" href="/static/main.css">
+
+<body>
+    <nav>
+        <ul>
+            <li>
+                <a href="/">
+                    <img src="../static/kuvat/logo.png" alt="RMD logo" width="20" height="20">
+                    <span>RateMyDemo</span>
+                </a>
+            </li>
+            {% if session.id %}
+            <li>
+                <a href="/account">
+                    <img src="/show/pfp/{{ session.id }}" alt="PFP" width="20" height="20">
+                    <span>{{session.username}}</span>
+                </a>
+            </li>
+            <li> <a href="/upload">Julkaise</a> </li>
+            {% else %}
+            <li> <a href="/login">Kirjaudu sisään</a> </li>
+            {% endif %}
+            <li> <a href="/releases">Kaikki julkaisut</a> </li>
+        </ul>
+    </nav>
+    <hr>
+
+    {% block content %}{% endblock %}
+</body>
