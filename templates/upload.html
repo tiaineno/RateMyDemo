@@ -5,7 +5,7 @@
 <h1>Julkaise</h1>
 <br>
 {% if error %}
-Syötä kaikki tiedot!
+{{ error }}
 {% endif %}
 
 <form action="/upload" method="POST" enctype="multipart/form-data">

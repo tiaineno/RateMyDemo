@@ -23,15 +23,7 @@ def logout():
     del session["username"]
     del session["id"]
 
-def register(username, password, file):
-    data = file.read()
-    #optional lines for checking the uploaded file
-    #name = file.filename
-    #if not name.endswith(".jpg"):
-        #return render_template("create_user.html", error="Virheellinen tiedosto")
-    #if len(data) > 100 * 1024:
-        #return render_template("create_user.html", error="Liian iso tiedosto")
-
+def register(username, password, data):
     sql = text("SELECT id FROM users WHERE username=:username")
     result = db.session.execute(sql, {"username": username})
     user = result.fetchone()

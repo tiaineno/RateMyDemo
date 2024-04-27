@@ -78,15 +78,13 @@ def audio(id):
     return response
 
 def change_pfp(file):
-    data = file.read()
     user_id = session["id"]
     sql = text("UPDATE users SET data = :data WHERE id = :user_id")
-    db.session.execute(sql, {"data": data, "user_id": user_id})
+    db.session.execute(sql, {"data": file, "user_id": user_id})
     db.session.commit()
 
 def upload(file, cover, title, genre):
     data = file.read()
-    cover = cover.read()
     user_id = session["id"]
     sql = text("""INSERT INTO releases(user_id, title, genre, data, cover)
                VALUES (:user_id, :title, :genre, :data, :cover) RETURNING id""")

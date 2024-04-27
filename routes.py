@@ -38,7 +38,15 @@ def register():
         username = request.form["username"]
         password = request.form["password"]
         file = request.files["file"]
-        if users.register(username, password, file):
+
+        name = file.filename
+        if not name.endswith((".jpg", ".png", ".jpeg")):
+            return render_template("/upload.html", error="Kuvan täytyy olla jpg tai png muodossa!")
+        d = file.read()
+        if len(d) > 10000*1024:
+            return render_template("/upload.html", error="Liian suuri kuvatiedosto!")
+        
+        if users.register(username, password, d):
             return redirect("/account")
         else:
             return render_template("create_user.html", error="Käyttäjätunnus on jo olemassa")
@@ -61,7 +69,13 @@ def show(source, id):
 @app.route("/change_pfp", methods = ["POST"])
 def change_pfp():
     file = request.files["file"]
-    data.change_pfp(file)
+    name = file.filename
+    if not name.endswith((".jpg", ".png", ".jpeg")):
+        return render_template("/upload.html", error="Kuvan täytyy olla jpg tai png muodossa!")
+    d = file.read()
+    if len(d) > 10000*1024:
+        return render_template("/upload.html", error="Liian suuri kuvatiedosto!")
+    data.change_pfp(d)
     return redirect("/account")
 
 #returns the uploading page or handles the upload process and returns the page of that release
@@ -75,9 +89,22 @@ def upload():
         title = request.form["title"]
         file = request.files["file"]
         cover = request.files["cover"]
-        #TODO: tarkista lataus
-            #return render_template("/upload", error=True)
-        result = data.upload(file, cover, title, genre)
+
+        name = cover.filename
+        if not name.endswith((".jpg", ".png", ".jpeg")):
+            return render_template("/upload.html", error="Kuvan täytyy olla jpg tai png muodossa!")
+        d = cover.read()
+        if len(d) > 10000*1024:
+            return render_template("/upload.html", error="Liian suuri kuvatiedosto!")
+        
+        name = file.filename
+        if not name.endswith((".mp3", ".wav")):
+            return render_template("/upload.html", error="Äänitiedoston täytyy olla mp3 tai wav muodossa!")
+        
+        if not title:
+            return render_template("/upload.html", error="Syötä julkaisun nimi")
+
+        result = data.upload(file, d, title, genre)
         return redirect(f"/release/{result.fetchone()[0]}")
 
 #returns the audio file
@@ -95,7 +122,6 @@ def release(id):
         user_id = session["id"]
     reviews = data.reviews(id, user_id)
     review = reviews[1]
-    print(review)
     reviews = reviews[0]
     ratings = data.ratings(id)
     return render_template("/release.html", id=id, title=release_data.title, genre=release_data.genre, user=release_data.username, reviews=reviews, ratings=ratings, review=review)
