@@ -10,6 +10,7 @@ CREATE TABLE releases (
     user_id INTEGER REFERENCES users,
     title TEXT,
     genre TEXT,
+    uploaded_at TIMESTAMP,
     cover BYTEA,
     data BYTEA
 );

@@ -8,21 +8,21 @@ def releases(limit, order, order2=""):
     if order2 not in ("ASC", "DESC", "asc", "desc"):
         order2 = ""
     
-    sql = text(f"""SELECT AVG(RA.rating) as rating, U.username as username, R.id as id, R.title as title
+    sql = text(f"""SELECT AVG(RA.rating) as rating, U.username as username, R.id as id, R.title as title, R.uploaded_at as date
                FROM releases R LEFT JOIN users U ON R.user_id = U.id LEFT JOIN ratings RA ON RA.release_id=R.id
                GROUP BY R.id, U.username, R.title ORDER BY {order} {order2} NULLS LAST LIMIT :limit""")
     releases_data = db.session.execute(sql, {"limit":limit})
     return releases_data
 
 def own_releases(id, limit=999999, order="id", order2=""):
-    sql = text(f"""SELECT AVG(RA.rating) as rating, R.id as id, R.title as title
+    sql = text(f"""SELECT AVG(RA.rating) as rating, R.id as id, R.title as title, R.uploaded_at as date
                FROM releases R LEFT JOIN ratings RA ON RA.release_id=R.id WHERE R.user_id = :id
                GROUP BY R.id, R.title ORDER BY {order} {order2} NULLS LAST LIMIT :limit""")
     releases_data = db.session.execute(sql, {"id":id, "limit":limit})
     return releases_data
 
 def release(id):
-    sql = text("""SELECT R.user_id AS user_id, R.title AS title, R.genre AS genre, U.username AS username
+    sql = text("""SELECT R.user_id AS user_id, R.title AS title, R.genre AS genre, R.uploaded_at AS date, U.username AS username
                FROM releases R, users U WHERE R.id = :id AND R.user_id = U.id""")
     release_data = db.session.execute(sql, {"id":id})
     release_data = release_data.fetchone()
@@ -86,8 +86,8 @@ def change_pfp(file):
 def upload(file, cover, title, genre):
     data = file.read()
     user_id = session["id"]
-    sql = text("""INSERT INTO releases(user_id, title, genre, data, cover)
-               VALUES (:user_id, :title, :genre, :data, :cover) RETURNING id""")
+    sql = text("""INSERT INTO releases(user_id, title, genre, data, cover, uploaded_at)
+               VALUES (:user_id, :title, :genre, :data, :cover, NOW()) RETURNING id""")
     result = db.session.execute(sql, {"user_id": user_id, "title": title, "genre": genre, "data": data, "cover":cover})
     db.session.commit()
     return result
@@ -99,7 +99,7 @@ def review(content, id):
         #deletes the old review
         sql = text("DELETE FROM reviews WHERE user_id = :user_id AND release_id = :id")
         db.session.execute(sql, {"user_id":session["id"], "id":id})
-    sql = text("INSERT INTO reviews (content, user_id, release_id) VALUES (:content, :user_id, :release_id)")
+    sql = text("INSERT INTO reviews (content, user_id, release_id, sent_at) VALUES (:content, :user_id, :release_id, NOW())")
     db.session.execute(sql, {"content":content, "user_id":session["id"], "release_id":id})
     db.session.commit()
 

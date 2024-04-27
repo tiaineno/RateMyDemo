@@ -124,7 +124,7 @@ def release(id):
     review = reviews[1]
     reviews = reviews[0]
     ratings = data.ratings(id)
-    return render_template("/release.html", id=id, title=release_data.title, genre=release_data.genre, user=release_data.username, reviews=reviews, ratings=ratings, review=review)
+    return render_template("/release.html", id=id, title=release_data.title, genre=release_data.genre, user=release_data.username, reviews=reviews, ratings=ratings, review=review, date=release_data.date)
 
 #adds the new review to the database
 @app.route("/review/<int:id>", methods = ["POST"])

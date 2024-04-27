@@ -9,7 +9,11 @@
 <a href=""><img src="/show/cover/{{item.id}}" alt="Kuva"
 width="50"
 height="50"/></a>
-Julkaisun <a href="/release/{{item.id}}">{{ item.title }}</a> arvostelusi: </br>
+Julkaisun <a href="/release/{{item.id}}">{{ item.title }}</a> arvostelusi
+{% if item.sent_at %}
+{{item.sent_at.strftime("%Y-%m-%d")}}
+{%endif%}
+: </br>
 {{ item.content }} <br>
 <form action="/delete_review" method="post">
     <input type="hidden" name="id" value={{item.review_id}} />

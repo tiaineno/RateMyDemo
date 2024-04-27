@@ -30,13 +30,16 @@ Järjestä: <a href="/releases/title_desc">Nimi (laskeva)</a>
                     height="100"/>
                 </div>
                 <div class="right">
+                    <a href="/release/{{r.id}}">{{r.title}}<br>Käyttäjältä {{r.username}}
                     {% if r.rating %}
-                    <a href="/release/{{r.id}}">{{r.title}}<br>Käyttäjältä {{r.username}}
-                        <br>Pisteet: {{r.rating|round(1)}}/10 </a>
+                        <br>Pisteet: {{r.rating|round(1)}}/10
                     {% else %}
-                    <a href="/release/{{r.id}}">{{r.title}}<br>Käyttäjältä {{r.username}}
-                        <br>Ei pisteytetty </a>
+                        <br>Ei pisteytetty
                     {% endif %}
+                    {%if r.date %}
+                        <br> {{r.date.strftime("%Y-%m-%d")}}
+                    {% endif %}
+                    </a>
                 </div>
             </div>
         </li>

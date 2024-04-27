@@ -29,7 +29,11 @@ height="100"/>
                     <img src="/show/cover/{{ r.id }}" alt="Kuva" width="50" height="50">
                 </div>
                 <div class="right">
-                    <a href="/release/{{ r.id }}">{{ r.title }}</a>
+                    <a href="/release/{{ r.id }}">{{ r.title }}
+                    {% if r.date %}
+                    <br>{{r.date.strftime("%Y-%m-%d")}}
+                    {%endif%}
+                    </a>
                 </div>
             </div>        
         </li>

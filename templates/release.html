@@ -7,7 +7,9 @@ Julkaisu {{title}} käyttäjältä {{user}} <br>
 <img src="/show/cover/{{id}}" alt="Kuva"
 width="200"
 height="200"/> <br>
-Julkaistu: {{date}} <p>
+{% if date %}
+Julkaistu: {{date.strftime("%Y-%m-%d")}} <br>
+{%endif%}
 
 <audio controls>
     <source src="/audio/{{id}}" type="audio/mp3">
@@ -23,8 +25,13 @@ Pisteytä: <br>
   <input type="submit" value="Tallenna">
 </form> <p>
 {% if review.content %}
-Arvostelusi: <br>
+Arvostelusi
+{% if review.sent_at %}
+ {{review.sent_at.strftime("%Y-%m-%d")}}
+{% endif %}
+: <br>
 {{review.content}}
+
 <hr>
 {% endif %}
 Arvostele: <br>
@@ -43,7 +50,12 @@ Arvostelut: <br>
 <img src="/show/pfp/{{ r.id }}" alt="Kuva"
 width="50"
 height="50"/><br>
-{{ r.username }}:<br>
+{{ r.username }}
+{% if r.sent_at %}
+ {{r.sent_at.strftime("%Y-%m-%d")}}
+{% endif %}
+ 
+:<br>
 <br>
 {{r.content}}
 <hr>
