@@ -15,9 +15,13 @@ height="100"/>
     Vaihda kuva:  <input type="file" name="file">
     <input type="submit" value="Lähetä">
     </form>
+    
+<a href="/logout">Kirjaudu ulos</a> <br> <br>
 
-
-<a href="/logout">Kirjaudu ulos</a>
+<form action="/delete_account" method="post">
+    <input type="hidden" name="id" value={{session.id}} />
+    <input type="submit" value="POISTA TILI" onclick="return confirm('Haluatko varmasti poistaa käyttäjätilisi? Kaikki sisältö poistetaan.')" />
+  </form>
 <hr>
 <h2>Omat julkaisut:</h2>
 <releases>

@@ -18,22 +18,36 @@ Julkaistu: {{date.strftime("%Y-%m-%d")}} <br>
 <p>
 
 {% if session.id %}
+  {% if session.id == user_id %}
+    <form action="/delete_release" method="post">
+      <input type="hidden" name="id" value={{id}} />
+      <input type="hidden" name="path" value="/releases" />
+      <input type="submit" value="Poista julkaisu" onclick="return confirm('Haluatko varmasti poistaa tämän julkaisun?')" />
+    </form><br><br>
+  {% endif %}
+
 Pisteytä: <br>
 <form action="/rate/{{id}}" method="POST">
   <input type="range" value="5" name="rating" min="1" max="10" oninput="this.nextElementSibling.value = this.value">
   <output>5</output>
   <input type="submit" value="Tallenna">
 </form> <p>
+
 {% if review.content %}
 Arvostelusi
 {% if review.sent_at %}
  {{review.sent_at.strftime("%Y-%m-%d")}}
 {% endif %}
 : <br>
-{{review.content}}
-
+{{review.content}} <br>
+<form action="/delete_review" method="post">
+  <input type="hidden" name="id" value={{review.id}} />
+  <input type="hidden" name="path" value={{request.path}} />
+  <input type="submit" value="Poista arvostelu" onclick="return confirm('Haluatko varmasti poistaa tämän arvostelun?')" />
+</form><br><br>
 <hr>
 {% endif %}
+
 Arvostele: <br>
 <form action="/review/{{id}}" method="POST">
     <textarea name="message" rows="5" cols="50"></textarea>

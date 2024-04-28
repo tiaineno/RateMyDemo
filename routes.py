@@ -124,7 +124,7 @@ def release(id):
     review = reviews[1]
     reviews = reviews[0]
     ratings = data.ratings(id)
-    return render_template("/release.html", id=id, title=release_data.title, genre=release_data.genre, user=release_data.username, reviews=reviews, ratings=ratings, review=review, date=release_data.date)
+    return render_template("/release.html", id=id, title=release_data.title, genre=release_data.genre, user=release_data.username, reviews=reviews, ratings=ratings, review=review, date=release_data.date, user_id=release_data.user_id)
 
 #adds the new review to the database
 @app.route("/review/<int:id>", methods = ["POST"])
@@ -140,10 +140,10 @@ def rating(id):
     data.rate(id, rating)
     return redirect(f"/release/{id}")
 
-#returns the page with all releases sorted by id
+#returns the page with all releases sorted by rating
 @app.route("/releases")
 def releases_null():
-    return redirect("/releases/id")
+    return redirect("/releases/rating_desc")
 
 #returns the page with all releases sorted by given parameter
 @app.route("/releases/<string:order>")
@@ -172,5 +172,23 @@ def reviews():
 @app.route("/delete_review/", methods = ["POST"])
 def delete_review():
     review_id = request.form["id"]
-    data.delete_review(review_id)
-    return redirect("/account/reviews/")
+    path = request.form["path"]
+    if not data.delete_review(review_id):
+        return "Sinulla ei ole oikeutta tehdä tätä!"
+    return redirect(path)
+
+@app.route("/delete_release/", methods = ["POST"])
+def delete_release():
+    release_id = request.form["id"]
+    path = request.form["path"]
+    if not data.delete_release(release_id):
+        return "Sinulla ei ole oikeutta tehdä tätä!"
+    return redirect(path)
+
+@app.route("/delete_account/", methods = ["POST"])
+def delete_account():
+    user_id = request.form["id"]
+    if session["id"] != int(user_id):
+        return "Sinulla ei ole oikeutta tehdä tätä!"
+    data.delete_account(user_id)
+    return redirect("/")

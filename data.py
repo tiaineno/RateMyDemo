@@ -45,7 +45,7 @@ def reviews(release_id, user_id = None):
 
     review = None
     if user_id:
-        sql = text(f"""SELECT R.content as content, R.sent_at as sent_at
+        sql = text(f"""SELECT R.content as content, R.sent_at as sent_at, R.id as id
                 FROM reviews R WHERE R.user_id = :user_id AND R.release_id = :release_id""")
         review = db.session.execute(sql, {"user_id":user_id, "release_id":release_id})
         review = review.fetchone()
@@ -104,9 +104,14 @@ def review(content, id):
     db.session.commit()
 
 def delete_review(id):
+    sql = text("SELECT user_id FROM reviews WHERE id = :id")
+    user_id = db.session.execute(sql, {"id": id}).fetchone()[0]
+    if user_id != session["id"]:
+        return False
     sql = text("DELETE FROM reviews WHERE id = :id")
     db.session.execute(sql, {"id": id})
     db.session.commit()
+    return True
 
 def rate(id, rating):
     sql = text("SELECT id FROM ratings WHERE user_id = :user_id AND release_id = :id")
@@ -125,3 +130,20 @@ def search(query, order="id"):
     query = f"%{query}%"
     release_data = db.session.execute(sql, {"q":query})
     return release_data
+
+def delete_release(id):
+    sql = text(f"SELECT user_id FROM releases WHERE id = :id")
+    user_id = db.session.execute(sql, {"id": id}).fetchone()[0]
+    if user_id != session["id"]:
+        return False
+    sql = text(f"""DELETE FROM releases WHERE id = :id""")
+    db.session.execute(sql, {"id": id})
+    db.session.commit()
+    return True
+
+def delete_account(id):
+    sql = text(f"DELETE FROM users WHERE id = :id")
+    db.session.execute(sql, {"id": id})
+    del session["username"]
+    del session["id"]
+    db.session.commit()

@@ -7,7 +7,7 @@ CREATE TABLE users (
 
 CREATE TABLE releases (
     id SERIAL PRIMARY KEY,
-    user_id INTEGER REFERENCES users,
+    user_id INTEGER REFERENCES users ON DELETE CASCADE,
     title TEXT,
     genre TEXT,
     uploaded_at TIMESTAMP,
@@ -17,15 +17,15 @@ CREATE TABLE releases (
 
 CREATE TABLE reviews (
     id SERIAL PRIMARY KEY,
-    user_id INTEGER REFERENCES users,
-    release_id INTEGER REFERENCES releases,
+    user_id INTEGER REFERENCES users ON DELETE CASCADE,
+    release_id INTEGER REFERENCES releases ON DELETE CASCADE,
     content TEXT,
     sent_at TIMESTAMP
 );
 
 CREATE TABLE ratings (
     id SERIAL PRIMARY KEY,
-    user_id INTEGER REFERENCES users,
-    release_id INTEGER REFERENCES releases,
+    user_id INTEGER REFERENCES users ON DELETE CASCADE,
+    release_id INTEGER REFERENCES releases ON DELETE CASCADE,
     rating INTEGER
 );
