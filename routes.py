@@ -40,11 +40,11 @@ def register():
         file = request.files["file"]
 
         name = file.filename
-        if not name.endswith((".jpg", ".png", ".jpeg")):
-            return render_template("/upload.html", error="Kuvan täytyy olla jpg tai png muodossa!")
+        if not name.endswith((".jpg", ".png", ".jpeg")) and name!="":
+            return render_template("/create_user.html", error="Kuvan täytyy olla jpg tai png muodossa!")
         d = file.read()
         if len(d) > 10000*1024:
-            return render_template("/upload.html", error="Liian suuri kuvatiedosto!")
+            return render_template("/create_user.html", error="Liian suuri kuvatiedosto!")
         
         if users.register(username, password, d):
             return redirect("/account")

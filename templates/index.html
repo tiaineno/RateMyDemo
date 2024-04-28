@@ -38,10 +38,10 @@
                 <img src="/show/cover/{{ r.id }}" alt="Kuva"> <br>
             </div>
             <div class="right">
-                <a href="/release/{{r.id}}">{{r.title}} käyttäjältä {{r.username}}</a><br>
+                <a href="/release/{{r.id}}">{{r.title}}<br>käyttäjältä {{r.username}}</a><br>
             </div>
-            {% if r.rating %}
         </div>
+        {% if r.rating %}
         Pisteet: {{r.rating|round(1)}}/10 <br>
         {% else %}
         Ei pisteytetty <br>
