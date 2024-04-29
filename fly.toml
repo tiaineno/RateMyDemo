@@ -1,4 +1,4 @@
-# fly.toml app configuration file generated for ratemydemo on 2024-04-29T17:32:12+03:00
+# fly.toml app configuration file generated for ratemydemo on 2024-04-29T18:51:14+03:00
 #
 # See https://fly.io/docs/reference/configuration/ for information about how to use this file.
 #
@@ -7,6 +7,10 @@ app = 'ratemydemo'
 primary_region = 'arn'
 
 [build]
+  builder = 'paketobuildpacks/builder:base'
+
+[env]
+  PORT = '5000'
 
 [http_service]
   internal_port = 5000
