@@ -14,12 +14,17 @@ def releases(limit, order, order2=""):
     releases_data = db.session.execute(sql, {"limit":limit})
     return releases_data
 
-def own_releases(id, limit=999999, order="id", order2=""):
+def own_releases(limit, order, order2=""):
+    if order not in ("id", "rating", "title"):
+        order = "id"
+    if order2 not in ("ASC", "DESC", "asc", "desc"):
+        order2 = ""
+
     sql = text(f"""SELECT AVG(RA.rating) as rating, R.id as id, R.title as title, R.uploaded_at as date
                FROM releases R LEFT JOIN ratings RA ON RA.release_id=R.id WHERE R.user_id = :id
                GROUP BY R.id, R.title ORDER BY {order} {order2} NULLS LAST LIMIT :limit""")
-    releases_data = db.session.execute(sql, {"id":id, "limit":limit})
-    return releases_data
+    releases_data = db.session.execute(sql, {"id":session["id"], "limit":limit})
+    return releases_data.fetchall()
 
 def release(id):
     sql = text("""SELECT R.user_id AS user_id, R.title AS title, R.genre AS genre, R.uploaded_at AS date, U.username AS username
@@ -177,8 +182,8 @@ def likes(limit=3, order="L.id", order2="DESC"):
         order2 = ""
 
     sql = text(f"""SELECT AVG(RA.rating) as rating, U.username as username, R.id as id, R.title as title,
-               R.uploaded_at as date FROM releases R LEFT JOIN users U ON R.user_id = U.id LEFT JOIN ratings RA
-               ON RA.release_id=R.id LEFT JOIN likes L ON L.release_id = R.id AND L.user_id = :user_id
+               R.uploaded_at as date FROM likes L LEFT JOIN releases R ON L.release_id = R.id
+               LEFT JOIN users U ON R.user_id = U.id LEFT JOIN ratings RA ON RA.release_id=R.id WHERE L.user_id = :user_id
                GROUP BY R.id, U.username, R.title, L.id ORDER BY {order} {order2} NULLS LAST LIMIT :limit""")
     result = db.session.execute(sql, {"user_id":session["id"], "limit": limit})
     return result.fetchall()

@@ -57,7 +57,7 @@ def account():
     id = None
     if "id" in session:
         id = session["id"]
-    releases = data.own_releases(id, 3)
+    releases = data.own_releases(3, "id", "DESC")
     likes = data.likes()
     return render_template("/account.html", result=releases, likes=likes)
 
@@ -204,3 +204,31 @@ def like():
     url = request.form["url"]
     data.like(release_id)
     return redirect(url)
+
+@app.route("/library/")
+def library_null():
+    return redirect("/library/L.id")
+
+@app.route("/library/<string:order>")
+def library(order):
+    if "id" not in session:
+        return render_template("/library.html")
+    order = order.split("_")
+    if len(order) < 2:
+        order = (order[0], None)
+    likes = data.likes(999, order[0], order[1])
+    return render_template("/library.html", likes=likes)
+
+@app.route("/own_releases/")
+def own_releases_null():
+    return redirect("/own_releases/id_desc")
+
+@app.route("/own_releases/<string:order>")
+def own_releases(order):
+    if "id" not in session:
+        return render_template("/library.html")
+    order = order.split("_")
+    if len(order) < 2:
+        order = (order[0], None)
+    releases = data.own_releases(999, order[0], order[1])
+    return render_template("/own_releases.html", releases=releases)

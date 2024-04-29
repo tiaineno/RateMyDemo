@@ -1,0 +1,64 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<title>Tykätyt julkaisut</title>
+<h1>Tykätyt julkaisut</h1>
+
+{% if session.id %}
+
+Järjestä: <a href="/library/rating_desc">Pisteet (paras ensin)</a>
+Järjestä: <a href="/library/rating_asc">Pisteet (huonoin ensin)</a>
+Järjestä: <a href="/library/id_desc">Julkaisupäivä (uusin ensin)</a>
+Järjestä: <a href="/library/id_asc">Julkaisupäivä (vanhin ensin)</a>
+Järjestä: <a href="/library/title">Nimi (nouseva)</a>
+Järjestä: <a href="/library/title_desc">Nimi (laskeva)</a>
+Järjestä: <a href="/library/L.id_asc">Tykätty (nouseva)</a>
+Järjestä: <a href="/library/L.id_desc">Tykätty (laskeva)</a>
+<hr>
+
+<releases>
+    <ul>
+        {% for r in likes %}
+        <li>
+            <div class="container">
+                <div class="left">
+                    <img src="/show/cover/{{ r.id }}" alt="Kuva"
+                    width="100"
+                    height="100"/>
+                </div>
+                <div class="right">
+                    {% if r.rating %}
+                    <a href="/release/{{r.id}}">{{r.title}}<br>Käyttäjältä {{r.username}}
+                        <br>Pisteet: {{r.rating|round(1)}}/10
+                        {% if r.date %}
+                        <br>{{r.date.strftime("%Y-%m-%d")}}
+                        {%endif%}
+                    </a>
+                    {% else %}
+                    <a href="/release/{{r.id}}">{{r.title}}<br>Käyttäjältä {{r.username}}
+                        <br>Ei pisteytetty
+                        {% if r.date %}
+                        <br>{{r.date.strftime("%Y-%m-%d")}}
+                        {%endif%}
+                    {% endif %}
+                </a>
+                </div>
+            </div>
+            <form action="/like" method="post">
+                <input type="hidden" name="id" value={{r.id}} />
+                <input type="hidden" name="url" value={{request.path}} />
+                <input type="image" src="/../static/kuvat/filled.png" width=30 height=30 name="submit" />
+                Poista tykkäys <br>
+              </form>
+        </li>
+        {% endfor %}
+    </ul>
+</releases>
+
+{%else%}
+    Et ole kirjautunut sisään
+    <a href="/login">Kirjaudu sisään</a> tai
+    <a href="/create_user">Luo tili</a>
+{% endif %}
+
+{% endblock %}
