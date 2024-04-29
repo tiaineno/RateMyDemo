@@ -159,12 +159,19 @@ def releases(order):
     releases_data = data.releases(1000, order[0], order[1])
     return render_template("/releases.html", data=releases_data)
 
-
-@app.route("/releases/search/", methods = ["POST"])
+@app.route("/search", methods = ["POST"])
 def search():
     query = request.form["query"]
-    releases_data = data.search(query)
-    return render_template("/search.html", data=releases_data)
+    return redirect(f"/releases/{query}/id")
+
+@app.route("/releases/<string:query>/<string:order>")
+def search_releases(query, order):
+    order = order.split("_")
+    print(order)
+    if len(order) < 2:
+        order = [order[0], None]
+    releases_data = data.search(query, order[0], order[1])
+    return render_template("/search.html", data=releases_data, query=query)
 
 @app.route("/account/reviews/")
 def reviews():

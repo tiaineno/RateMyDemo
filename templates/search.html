@@ -3,20 +3,19 @@
 
 <title>Haun tulokset</title>
 <h1>Haun tulokset</h1>
-<form action="/releases/search" method="POST">
+<form action="/search" method="POST">
     <p>Hae julkaisuja:<br>
     <input type="text" name="query"></p>
     <input type="submit" value="Hae">
     </form>
-<a href="/releases">Kaikki julkaisut</a>
-
-KORJAA NÄMÄ: <br>
-Järjestä: <a href="/releases/rating_desc">Pisteet (paras ensin)</a>
-Järjestä: <a href="/releases/rating_asc">Pisteet (huonoin ensin)</a>
-Järjestä: <a href="/releases/id_desc">Julkaisupäivä (uusin ensin)</a>
-Järjestä: <a href="/releases/id_asc">Julkaisupäivä (vanhin ensin)</a>
-Järjestä: <a href="/releases/title">Nimi (nouseva)</a>
-Järjestä: <a href="/releases/title_desc">Nimi (laskeva)</a>
+<h2><a href="/releases">Kaikki julkaisut</a></h2>
+<h3>Järjestä: </h3>
+<a href="/releases/{{query}}/rating_desc">Pisteet (paras ensin)</a>, 
+<a href="/releases/{{query}}/rating_asc">Pisteet (huonoin ensin)</a> <br>
+<a href="/releases/{{query}}/id_desc">Julkaisupäivä (uusin ensin)</a>, 
+<a href="/releases/{{query}}/id_asc">Julkaisupäivä (vanhin ensin)</a><br>
+<a href="/releases/{{query}}/title">Nimi (nouseva)</a>, 
+<a href="/releases/{{query}}/title_desc">Nimi (laskeva)</a>
 <hr>
 
 <releases>

@@ -135,10 +135,15 @@ def rate(id, rating):
     db.session.execute(sql, {"rating":rating, "user_id":session["id"], "release_id":id})
     db.session.commit()
 
-def search(query, order="id"):
+def search(query, order="id", order2=""):
+    if order not in ("id", "rating", "title"):
+        order = "id"
+    if order2 not in ("ASC", "DESC", "asc", "desc"):
+        order2 = ""
+    print(order, order2)
     sql = text(f"""SELECT AVG(RA.rating) as rating, U.username as username, R.id as id, R.title as title
                FROM releases R LEFT JOIN users U ON R.user_id = U.id LEFT JOIN ratings RA ON RA.release_id=R.id
-               WHERE (title ILIKE :q OR username ILIKE :q) GROUP BY R.id, U.username, R.title ORDER BY {order}""")
+               WHERE (title ILIKE :q OR username ILIKE :q) GROUP BY R.id, U.username, R.title ORDER BY {order} {order2}""")
     query = f"%{query}%"
     release_data = db.session.execute(sql, {"q":query})
     return release_data
