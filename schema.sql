@@ -29,3 +29,9 @@ CREATE TABLE ratings (
     release_id INTEGER REFERENCES releases ON DELETE CASCADE,
     rating INTEGER
 );
+
+CREATE TABLE likes (
+    id SERIAL PRIMARY KEY,
+    user_id INTEGER REFERENCES users ON DELETE CASCADE,
+    release_id INTEGER REFERENCES releases ON DELETE CASCADE
+)

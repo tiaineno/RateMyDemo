@@ -57,8 +57,9 @@ def account():
     id = None
     if "id" in session:
         id = session["id"]
-    result = data.own_releases(id, 3)
-    return render_template("/account.html", result=result)
+    releases = data.own_releases(id, 3)
+    likes = data.likes()
+    return render_template("/account.html", result=releases, likes=likes)
 
 #returns a profile picture(/pfp) or an album cover(/cover) based on given id
 @app.route("/show/<string:source>/<int:id>")
@@ -117,15 +118,18 @@ def audio(id):
 @app.route("/release/<int:id>")
 def release(id):
     release_data = data.release(id)
-    user_id = None
+    user_id = 0
+    liked = None
     if "id" in session:
         user_id = session["id"]
+        liked = data.liked(id)
+    likes = data.likes_count(id)
     reviews = data.reviews(id, user_id)
     review = reviews[1]
     reviews = reviews[0]
     ratings = data.ratings(id)
     rating = data.own_rating(id)
-    return render_template("/release.html", id=id, title=release_data.title, genre=release_data.genre, user=release_data.username, reviews=reviews, ratings=ratings, review=review, date=release_data.date, user_id=release_data.user_id, rating=rating)
+    return render_template("/release.html", id=id, title=release_data.title, genre=release_data.genre, user=release_data.username, reviews=reviews, ratings=ratings, review=review, date=release_data.date, user_id=release_data.user_id, rating=rating, liked=liked, likes=likes)
 
 #adds the new review to the database
 @app.route("/review/<int:id>", methods = ["POST"])
@@ -193,3 +197,10 @@ def delete_account():
         return "Sinulla ei ole oikeutta tehdä tätä!"
     data.delete_account(user_id)
     return redirect("/")
+
+@app.route("/like", methods = ["POST"])
+def like():
+    release_id = request.form["id"]
+    url = request.form["url"]
+    data.like(release_id)
+    return redirect(url)

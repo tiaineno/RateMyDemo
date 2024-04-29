@@ -23,11 +23,31 @@ height="100"/>
     <input type="submit" value="POISTA TILI" onclick="return confirm('Haluatko varmasti poistaa käyttäjätilisi? Kaikki sisältö poistetaan.')" />
   </form>
 <hr>
-<h2>Omat julkaisut:</h2>
-<releases>
-    <ul>
+
+<div class="container">
+    <div class="popular-releases">
+        <h2>Tykätyt julkaisut:</h2>
+        {% for r in likes %}
+        <div class="container">
+            <div class="left">
+                <img src="/show/cover/{{ r.id }}" alt="Kuva"> <br>
+            </div>
+            <div class="right">
+                <a href="/release/{{r.id}}">{{r.title}}<br>käyttäjältä {{r.username}}</a><br>
+            </div>
+        </div>
+        {% if r.rating %}
+        Pisteet: {{r.rating|round(1)}}/5 <br>
+        {% else %}
+        Ei pisteytetty <br>
+        {% endif %} <hr>
+        {% endfor %}
+        <a href="/library">TODO: Näytä kaikki</a>
+    </div>
+
+    <div class="new-releases">
+        <h2>Omat julkaisut:</h2>
         {% for r in result %}
-        <li>
             <div class="container">
                 <div class="left">
                     <img src="/show/cover/{{ r.id }}" alt="Kuva" width="50" height="50">
@@ -39,28 +59,21 @@ height="100"/>
                     {%endif%}
                     </a>
                 </div>
-            </div>        
-        </li>
+            </div>
+            {% if r.rating %}
+                Pisteet: {{r.rating|round(1)}}/5 <br>
+            {% else %}
+                Ei pisteytetty <br>
+            {% endif %} <hr>
         {% endfor %}
-    </ul>
-</releases> <br>
-<a href="/Library">Näytä kaikki</a> <br>
+        <a href="/own_releases">TODO: Näytä kaikki</a> <br>
+    </div>
+</div>
 
-<div class="container">
-    <div class="popular-releases">
-        Omat arvostelut: <br>
-        TODO <br>
-        <a href="/account/reviews">Näytä kaikki</a> <br>
-    </div>
-    <div class="new-releases">
-        Omat pisteytykset: <br>
-        TODO <br>
-        <a href="/account/ratings">Näytä kaikki</a>
-    </div>
-    {% else %}
+{% else %}
     Et ole kirjautunut sisään
     <a href="/login">Kirjaudu sisään</a> tai
     <a href="/create_user">Luo tili</a>
-    {% endif %}
+{% endif %}
 
 {% endblock %}

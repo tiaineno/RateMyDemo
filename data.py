@@ -45,12 +45,11 @@ def own_rating(id):
     except TypeError:
         return None
 
-def reviews(release_id, user_id = None):
+def reviews(release_id, user_id):
     sql = text(f"""SELECT R.content as content, R.sent_at as sent_at, R.user_id as id, U.username as username
                FROM reviews R, users U WHERE R.release_id = :id AND R.user_id = U.id AND R.user_id <> :user_id""")
     reviews = db.session.execute(sql, {"id":release_id, "user_id":user_id})
     reviews = reviews.fetchall()
-
     review = None
     if user_id:
         sql = text(f"""SELECT R.content as content, R.sent_at as sent_at, R.id as id
@@ -140,7 +139,7 @@ def search(query, order="id"):
     return release_data
 
 def delete_release(id):
-    sql = text(f"SELECT user_id FROM releases WHERE id = :id")
+    sql = text("SELECT user_id FROM releases WHERE id = :id")
     user_id = db.session.execute(sql, {"id": id}).fetchone()[0]
     if user_id != session["id"]:
         return False
@@ -150,8 +149,43 @@ def delete_release(id):
     return True
 
 def delete_account(id):
-    sql = text(f"DELETE FROM users WHERE id = :id")
+    sql = text("DELETE FROM users WHERE id = :id")
     db.session.execute(sql, {"id": id})
     del session["username"]
     del session["id"]
     db.session.commit()
+
+def likes_count(id):
+    sql = text("SELECT COUNT(id) FROM likes WHERE release_id = :id")
+    result = db.session.execute(sql, {"id": id})
+    return result.fetchone()[0]
+
+def like(id):
+    sql = text("SELECT COUNT(id) FROM likes WHERE release_id = :id AND user_id = :user_id")
+    result = db.session.execute(sql, {"id": id, "user_id": session["id"]}).fetchone()[0]
+    if result:
+        sql = text("DELETE FROM likes WHERE user_id = :user_id AND release_id = :id")
+    else:
+        sql = text("INSERT INTO likes (user_id, release_id) VALUES (:user_id, :id)")
+    db.session.execute(sql, {"user_id": session["id"], "id": id})
+    db.session.commit()
+
+def likes(limit=3, order="L.id", order2="DESC"):
+    if order not in ("id", "rating", "title", "L.id"):
+        order = "id"
+    if order2 not in ("ASC", "DESC", "asc", "desc"):
+        order2 = ""
+
+    sql = text(f"""SELECT AVG(RA.rating) as rating, U.username as username, R.id as id, R.title as title,
+               R.uploaded_at as date FROM releases R LEFT JOIN users U ON R.user_id = U.id LEFT JOIN ratings RA
+               ON RA.release_id=R.id LEFT JOIN likes L ON L.release_id = R.id AND L.user_id = :user_id
+               GROUP BY R.id, U.username, R.title, L.id ORDER BY {order} {order2} NULLS LAST LIMIT :limit""")
+    result = db.session.execute(sql, {"user_id":session["id"], "limit": limit})
+    return result.fetchall()
+
+def liked(id):
+    sql = text("SELECT COUNT(*) FROM likes WHERE release_id = :id AND user_id = :user_id")
+    result = db.session.execute(sql, {"id": id, "user_id": session["id"]})
+    if result.fetchone()[0]:
+        return True
+    return False
