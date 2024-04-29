@@ -29,13 +29,21 @@ def release(id):
     return release_data
 
 def ratings(id):
-    sql = text(f"SELECT AVG(rating) FROM ratings WHERE release_id = {id}")
-    ratings = db.session.execute(sql)
+    sql = text(f"SELECT AVG(rating) FROM ratings WHERE release_id = :id")
+    ratings = db.session.execute(sql, {"id": id})
     try:
-        ratings = int(ratings.fetchone()[0])
+        return ratings.fetchone()[0]
     except TypeError:
-        ratings = "Ei pisteytyksiä"
-    return ratings
+        return None
+
+def own_rating(id):
+    if "id" not in session:
+        return None
+    sql = text("SELECT rating FROM ratings WHERE release_id = :id AND user_id = :user_id")
+    try:
+        return db.session.execute(sql, {"id": id, "user_id": session["id"]}).fetchone()[0]
+    except TypeError:
+        return None
 
 def reviews(release_id, user_id = None):
     sql = text(f"""SELECT R.content as content, R.sent_at as sent_at, R.user_id as id, U.username as username
