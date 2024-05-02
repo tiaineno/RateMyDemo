@@ -159,11 +159,13 @@ def releases(order):
     releases_data = data.releases(1000, order[0], order[1])
     return render_template("/releases.html", data=releases_data)
 
+#redirects user to the correct page after search
 @app.route("/search", methods = ["POST"])
 def search():
     query = request.form["query"]
     return redirect(f"/releases/{query}/id")
 
+#returns the result of the search
 @app.route("/releases/<string:query>/<string:order>")
 def search_releases(query, order):
     order = order.split("_")
@@ -173,6 +175,7 @@ def search_releases(query, order):
     releases_data = data.search(query, order[0], order[1])
     return render_template("/search.html", data=releases_data, query=query)
 
+#return a page with users own reviews
 @app.route("/account/reviews/")
 def reviews():
     reviews_data = None
@@ -181,6 +184,7 @@ def reviews():
         reviews_data = data.reviews2(user_id)
     return render_template("/reviews.html", reviews=reviews_data)
 
+#delete review if user is privileged to do that
 @app.route("/delete_review/", methods = ["POST"])
 def delete_review():
     review_id = request.form["id"]
@@ -189,6 +193,7 @@ def delete_review():
         return "Sinulla ei ole oikeutta tehdä tätä!"
     return redirect(path)
 
+#delete release if user is privileged to do that
 @app.route("/delete_release/", methods = ["POST"])
 def delete_release():
     release_id = request.form["id"]
@@ -197,6 +202,7 @@ def delete_release():
         return "Sinulla ei ole oikeutta tehdä tätä!"
     return redirect(path)
 
+#delete account if user is privileged to do that
 @app.route("/delete_account/", methods = ["POST"])
 def delete_account():
     user_id = request.form["id"]
@@ -205,6 +211,7 @@ def delete_account():
     users.delete_account(user_id)
     return redirect("/")
 
+#like or unlike release
 @app.route("/like", methods = ["POST"])
 def like():
     release_id = request.form["id"]
@@ -212,10 +219,12 @@ def like():
     data.like(release_id)
     return redirect(url)
 
+#redirect
 @app.route("/library/")
 def library_null():
     return redirect("/library/L.id")
 
+#show releases liked by user
 @app.route("/library/<string:order>")
 def library(order):
     if "id" not in session:
@@ -226,10 +235,12 @@ def library(order):
     likes = data.likes(999, order[0], order[1])
     return render_template("/library.html", likes=likes)
 
+#redirect
 @app.route("/own_releases/")
 def own_releases_null():
     return redirect("/own_releases/id_desc")
 
+#return a page with releases uploaded by the user
 @app.route("/own_releases/<string:order>")
 def own_releases(order):
     if "id" not in session:

@@ -2,6 +2,7 @@ from sqlalchemy.sql import text
 from db import db
 from flask import make_response, session
 
+#return picture from database
 def pic(source, id):
     if source == "pfp":
         sql = text("SELECT data FROM users WHERE id = :id")
@@ -13,6 +14,7 @@ def pic(source, id):
     response.headers.set("Content-Type", "image/jpeg")
     return response
 
+#return audio file from database
 def audio(id):
     sql = text("SELECT data FROM releases WHERE id = :id")
     result = db.session.execute(sql, {"id":id})
@@ -21,6 +23,7 @@ def audio(id):
     response.headers.set("Content-Type", "audio/mp3")
     return response
 
+#insert new release data into database
 def upload(file, cover, title, genre):
     data = file.read()
     user_id = session["id"]
@@ -30,6 +33,7 @@ def upload(file, cover, title, genre):
     db.session.commit()
     return result
 
+#delete release from database
 def delete_release(id):
     sql = text("SELECT user_id FROM releases WHERE id = :id")
     user_id = db.session.execute(sql, {"id": id}).fetchone()[0]
@@ -40,6 +44,7 @@ def delete_release(id):
     db.session.commit()
     return True
 
+#return releases filtered and sorted by parameters
 def search(query, order="id", order2=""):
     if order not in ("id", "rating", "title"):
         order = "id"
@@ -53,6 +58,7 @@ def search(query, order="id", order2=""):
     release_data = db.session.execute(sql, {"q":query})
     return release_data
 
+#return all releases
 def releases(limit, order, order2=""):
     if order not in ("id", "rating", "title"):
         order = "id"
@@ -65,6 +71,7 @@ def releases(limit, order, order2=""):
     releases_data = db.session.execute(sql, {"limit":limit})
     return releases_data
 
+#return users own releases
 def own_releases(limit, order, order2=""):
     if order not in ("id", "rating", "title"):
         order = "id"
@@ -77,6 +84,7 @@ def own_releases(limit, order, order2=""):
     releases_data = db.session.execute(sql, {"id":session["id"], "limit":limit})
     return releases_data.fetchall()
 
+#return the data of one release
 def release(id):
     sql = text("""SELECT R.user_id AS user_id, R.title AS title, R.genre AS genre, R.uploaded_at AS date, U.username AS username
                FROM releases R, users U WHERE R.id = :id AND R.user_id = U.id""")
@@ -84,6 +92,7 @@ def release(id):
     release_data = release_data.fetchone()
     return release_data
 
+#insert or update rating into database
 def rate(id, rating):
     sql = text("SELECT id FROM ratings WHERE user_id = :user_id AND release_id = :id")
     check = db.session.execute(sql, {"user_id":session["id"], "id":id})
@@ -94,6 +103,7 @@ def rate(id, rating):
     db.session.execute(sql, {"rating":rating, "user_id":session["id"], "release_id":id})
     db.session.commit()
 
+#return average rating of one release
 def ratings(id):
     sql = text(f"SELECT AVG(rating) FROM ratings WHERE release_id = :id")
     ratings = db.session.execute(sql, {"id": id})
@@ -102,6 +112,7 @@ def ratings(id):
     except TypeError:
         return None
 
+#return users own rating
 def own_rating(id):
     if "id" not in session:
         return None
@@ -111,6 +122,7 @@ def own_rating(id):
     except TypeError:
         return None
 
+#insert or update users review
 def review(content, id):
     sql = text("SELECT id FROM reviews WHERE user_id = :user_id AND release_id = :id")
     check = db.session.execute(sql, {"user_id":session["id"], "id":id})
@@ -122,6 +134,7 @@ def review(content, id):
     db.session.execute(sql, {"content":content, "user_id":session["id"], "release_id":id})
     db.session.commit()
 
+#deletes users review from the database
 def delete_review(id):
     sql = text("SELECT user_id FROM reviews WHERE id = :id")
     user_id = db.session.execute(sql, {"id": id}).fetchone()[0]
@@ -132,6 +145,7 @@ def delete_review(id):
     db.session.commit()
     return True
 
+#return other users reviews and users own review in a tuple
 def reviews(release_id, user_id):
     sql = text(f"""SELECT R.content as content, R.sent_at as sent_at, R.user_id as id, U.username as username
                FROM reviews R, users U WHERE R.release_id = :id AND R.user_id = U.id AND R.user_id <> :user_id""")
@@ -145,6 +159,7 @@ def reviews(release_id, user_id):
         review = review.fetchone()
     return (reviews,review)
 
+#return users own reviews
 def reviews2(id):
     sql = text(f"""SELECT R.content as content, R.sent_at as sent_at, R.id as review_id, R.release_id as id, Re.title as title
                FROM reviews R, releases Re WHERE R.user_id = :id AND R.release_id = Re.id""")
@@ -152,11 +167,13 @@ def reviews2(id):
     reviews = reviews.fetchall()
     return reviews
 
+#return the amount of likes of one release
 def likes_count(id):
     sql = text("SELECT COUNT(id) FROM likes WHERE release_id = :id")
     result = db.session.execute(sql, {"id": id})
     return result.fetchone()[0]
 
+#like or unlike release
 def like(id):
     sql = text("SELECT COUNT(id) FROM likes WHERE release_id = :id AND user_id = :user_id")
     result = db.session.execute(sql, {"id": id, "user_id": session["id"]}).fetchone()[0]
@@ -167,6 +184,7 @@ def like(id):
     db.session.execute(sql, {"user_id": session["id"], "id": id})
     db.session.commit()
 
+#return the releases liked by user
 def likes(limit=3, order="L.id", order2="DESC"):
     if order not in ("id", "rating", "title", "L.id"):
         order = "id"
@@ -180,6 +198,7 @@ def likes(limit=3, order="L.id", order2="DESC"):
     result = db.session.execute(sql, {"user_id":session["id"], "limit": limit})
     return result.fetchall()
 
+#return True if the user has liked given release
 def liked(id):
     sql = text("SELECT COUNT(*) FROM likes WHERE release_id = :id AND user_id = :user_id")
     result = db.session.execute(sql, {"id": id, "user_id": session["id"]})

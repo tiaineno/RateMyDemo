@@ -1,4 +1,4 @@
-#import all requires libraries
+#import all required libraries and other set up
 from os import getenv
 from flask import Flask
 from dotenv import load_dotenv
