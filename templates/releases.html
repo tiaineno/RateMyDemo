@@ -30,7 +30,7 @@
                 <div class="right">
                     {% if r.rating %}
                     <a href="/release/{{r.id}}">{{r.title}}<br>Käyttäjältä {{r.username}}
-                        <br>Pisteet: {{r.rating|round(1)}}/10
+                        <br>Pisteet: {{r.rating|round(1)}}/5
                         {% if r.date %}
                         <br>{{r.date.strftime("%Y-%m-%d")}}
                         {%endif%}

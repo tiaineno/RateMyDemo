@@ -37,3 +37,16 @@ def register(username, password, data):
     session["username"] = username
     session["id"] = user_id
     return True
+
+def delete_account(id):
+    sql = text("DELETE FROM users WHERE id = :id")
+    db.session.execute(sql, {"id": id})
+    del session["username"]
+    del session["id"]
+    db.session.commit()
+
+def change_pfp(file):
+    user_id = session["id"]
+    sql = text("UPDATE users SET data = :data WHERE id = :user_id")
+    db.session.execute(sql, {"data": file, "user_id": user_id})
+    db.session.commit()

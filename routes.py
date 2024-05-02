@@ -76,7 +76,7 @@ def change_pfp():
     d = file.read()
     if len(d) > 10000*1024:
         return render_template("/upload.html", error="Liian suuri kuvatiedosto!")
-    data.change_pfp(d)
+    users.change_pfp(d)
     return redirect("/account")
 
 #returns the uploading page or handles the upload process and returns the page of that release
@@ -202,7 +202,7 @@ def delete_account():
     user_id = request.form["id"]
     if session["id"] != int(user_id):
         return "Sinulla ei ole oikeutta tehdä tätä!"
-    data.delete_account(user_id)
+    users.delete_account(user_id)
     return redirect("/")
 
 @app.route("/like", methods = ["POST"])
