@@ -7,7 +7,7 @@
 <p>
 {% if session.username %}
 Olet kirjautunut nimellä {{ session.username }} <br>
-<img src="/show/pfp/{{ session.id }}" alt="Kuva"
+<img src="/show/pfp/{{ session.id }}" alt="Profiilikuva"
 width="100"
 height="100"/>
 <br>
@@ -30,11 +30,11 @@ height="100"/>
 
 <div class="container">
     <div class="popular-releases">
-        <h2>Tykätyt julkaisut:</h2>
+        <h2><a href="/library">Tykätyt julkaisut:</a></h2>
         {% for r in likes %}
         <div class="container">
             <div class="left">
-                <img src="/show/cover/{{ r.id }}" alt="Kuva"> <br>
+                <a href="/release/{{r.id}}"><img src="/show/cover/{{ r.id }}" alt={{r.title}}> </a> <br>
             </div>
             <div class="right">
                 <a href="/release/{{r.id}}">{{r.title}}<br>käyttäjältä {{r.username}}</a><br>
@@ -50,11 +50,12 @@ height="100"/>
     </div>
 
     <div class="new-releases">
-        <h2>Omat julkaisut:</h2>
+        <h2><a href="/own_releases/">Omat julkaisut:</a></h2>
+        
         {% for r in result %}
             <div class="container">
                 <div class="left">
-                    <img src="/show/cover/{{ r.id }}" alt="Kuva" width="50" height="50">
+                    <a href="/release/{{r.id}}"> <img src="/show/cover/{{ r.id }}" alt={{r.title}} width="50" height="50"> </a>
                 </div>
                 <div class="right">
                     <a href="/release/{{ r.id }}">{{ r.title }}

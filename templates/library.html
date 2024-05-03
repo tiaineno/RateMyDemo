@@ -6,14 +6,15 @@
 
 {% if session.id %}
 
-Järjestä: <a href="/library/rating_desc">Pisteet (paras ensin)</a>
-Järjestä: <a href="/library/rating_asc">Pisteet (huonoin ensin)</a>
-Järjestä: <a href="/library/id_desc">Julkaisupäivä (uusin ensin)</a>
-Järjestä: <a href="/library/id_asc">Julkaisupäivä (vanhin ensin)</a>
-Järjestä: <a href="/library/title">Nimi (nouseva)</a>
-Järjestä: <a href="/library/title_desc">Nimi (laskeva)</a>
-Järjestä: <a href="/library/L.id_asc">Tykätty (nouseva)</a>
-Järjestä: <a href="/library/L.id_desc">Tykätty (laskeva)</a>
+<h2>Järjestä:</h2>
+<a href="/library/rating_desc">Pisteet (paras ensin)</a>,
+<a href="/library/rating_asc">Pisteet (huonoin ensin)</a><br>
+<a href="/library/id_desc">Julkaisupäivä (uusin ensin)</a>,
+<a href="/library/id_asc">Julkaisupäivä (vanhin ensin)</a><br>
+<a href="/library/title">Nimi (nouseva)</a>,
+<a href="/library/title_desc">Nimi (laskeva)</a><br>
+<a href="/library/L.id_asc">Tykätty (nouseva)</a>,
+<a href="/library/L.id_desc">Tykätty (laskeva)</a>
 <hr>
 
 <releases>
@@ -22,9 +23,9 @@ Järjestä: <a href="/library/L.id_desc">Tykätty (laskeva)</a>
         <li>
             <div class="container">
                 <div class="left">
-                    <img src="/show/cover/{{ r.id }}" alt="Kuva"
+                    <a href="/release/{{r.id}}"> <img src="/show/cover/{{ r.id }}" alt="Albumin kansi"
                     width="100"
-                    height="100"/>
+                    height="100"/> </a>
                 </div>
                 <div class="right">
                     {% if r.rating %}
@@ -49,7 +50,7 @@ Järjestä: <a href="/library/L.id_desc">Tykätty (laskeva)</a>
                 <input type="hidden" name="url" value={{request.path}} />
                 <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
                 <input type="image" src="/../static/kuvat/filled.png" width=30 height=30 name="submit" />
-                Poista tykkäys <br>
+                <input type="submit" value="Poista tykkäys"/>
               </form>
         </li>
         {% endfor %}

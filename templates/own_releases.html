@@ -6,12 +6,13 @@
 
 {% if session.id %}
 
-Järjestä: <a href="/own_releases/rating_desc">Pisteet (paras ensin)</a>
-Järjestä: <a href="/own_releases/rating_asc">Pisteet (huonoin ensin)</a>
-Järjestä: <a href="/own_releases/id_desc">Julkaisupäivä (uusin ensin)</a>
-Järjestä: <a href="/own_releases/id_asc">Julkaisupäivä (vanhin ensin)</a>
-Järjestä: <a href="/own_releases/title">Nimi (nouseva)</a>
-Järjestä: <a href="/own_releases/title_desc">Nimi (laskeva)</a>
+<h2>Järjestä:</h2>
+<a href="/own_releases/rating_desc">Pisteet (paras ensin)</a>,
+<a href="/own_releases/rating_asc">Pisteet (huonoin ensin)</a><br>
+<a href="/own_releases/id_desc">Julkaisupäivä (uusin ensin)</a>,
+<a href="/own_releases/id_asc">Julkaisupäivä (vanhin ensin)</a><br>
+<a href="/own_releases/title">Nimi (nouseva)</a>,
+<a href="/own_releases/title_desc">Nimi (laskeva)</a>
 <hr>
 
 <releases>
@@ -20,9 +21,15 @@ Järjestä: <a href="/own_releases/title_desc">Nimi (laskeva)</a>
         <li>
             <div class="container">
                 <div class="left">
-                    <img src="/show/cover/{{ r.id }}" alt="Kuva"
+                    <a href="/release/{{r.id}}"><img src="/show/cover/{{ r.id }}" alt="Albumin kansi"
                     width="100"
-                    height="100"/>
+                    height="100"/> </a>
+                    <a> <form action="/delete_release" method="post">
+                        <input type="hidden" name="id" value={{r.id}} />
+                        <input type="hidden" name="path" value="/own_releases/" />
+                        <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
+                        <input type="submit" value="Poista julkaisu" onclick="return confirm('Haluatko varmasti poistaa tämän julkaisun?')" />
+                      </form> </a>
                 </div>
                 <div class="right">
                     {% if r.rating %}
@@ -41,13 +48,7 @@ Järjestä: <a href="/own_releases/title_desc">Nimi (laskeva)</a>
                     {% endif %}
                 </a>
                 </div>
-            </div>
-            <form action="/delete_release" method="post">
-                <input type="hidden" name="id" value={{r.id}} />
-                <input type="hidden" name="path" value="/own_releases/" />
-                <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
-                <input type="submit" value="Poista julkaisu" onclick="return confirm('Haluatko varmasti poistaa tämän julkaisun?')" />
-              </form><br>
+            </div> 
         </li>
         {% endfor %} <hr>
     </ul>

@@ -11,9 +11,9 @@
         Tervetuloa <br>
         RateMyDemoon! <br> <br>
 
-        <img src="/show/pfp/{{ session.id }}" alt="Kuva"
+        <a href="/account"> <img src="/show/pfp/{{ session.id }}" alt="Profiilikuva"
         width="80"
-        height="80"/>
+        height="80"> </a>
         {% else %}
         Tervetuloa <br>
         RateMyDemoon! <br> <br>
@@ -31,11 +31,11 @@
 
 <div class="container">
     <div class="popular-releases">
-        <h2>Suosituimmat julkaisut:</h2>
+        <a href="/releases" > <h2>Suosituimmat julkaisut:</h2> </a>
         {% for r in most_popular %}
         <div class="container">
             <div class="left">
-                <img src="/show/cover/{{ r.id }}" alt="Kuva"> <br>
+                <a href="/release/{{r.id}}"> <img src="/show/cover/{{ r.id }}" alt="Albumin kansi"> </a>
             </div>
             <div class="right">
                 <a href="/release/{{r.id}}">{{r.title}}<br>käyttäjältä {{r.username}}</a><br>
@@ -51,11 +51,11 @@
     </div>
 
     <div class="new-releases">
-        <h2>Uusimmat julkaisut:</h2>
+        <a href="/releases/id_desc"> <h2>Uusimmat julkaisut:</h2> </a>
         {% for r in releases %}
         <div class = "container">
             <div class="left">
-                <img src="/show/cover/{{ r.id }}" alt="Kuva">
+                <a href="/release/{{r.id}}"> <img src="/show/cover/{{ r.id }}" alt="Albumin kansi"> </a>
             </div>
             <div class="right">
                 <a href="/release/{{r.id}}">{{r.title}}<br>käyttäjältä {{r.username}}</a><br>
