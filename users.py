@@ -2,6 +2,7 @@ from db import db
 from flask import session
 from sqlalchemy.sql import text
 from werkzeug.security import check_password_hash, generate_password_hash
+import secrets
 
 def login(username, password):
     sql = text("SELECT id, password FROM users WHERE username = :username")
@@ -15,6 +16,7 @@ def login(username, password):
         user_id = user.id
         session["username"] = username
         session["id"] = user_id
+        session["csrf_token"] = secrets.token_hex(16)
         return True
     
     return False
@@ -22,6 +24,7 @@ def login(username, password):
 def logout():
     del session["username"]
     del session["id"]
+    del session["csrf_token"]
 
 def register(username, password, data):
     sql = text("SELECT id FROM users WHERE username=:username")
@@ -36,6 +39,7 @@ def register(username, password, data):
     db.session.commit()
     session["username"] = username
     session["id"] = user_id
+    session["csrf_token"] = secrets.token_hex(16)
     return True
 
 def delete_account(id):
@@ -43,6 +47,7 @@ def delete_account(id):
     db.session.execute(sql, {"id": id})
     del session["username"]
     del session["id"]
+    del session["csrf_token"]
     db.session.commit()
 
 def change_pfp(file):

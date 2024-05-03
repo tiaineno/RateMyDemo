@@ -47,6 +47,7 @@ Järjestä: <a href="/library/L.id_desc">Tykätty (laskeva)</a>
             <form action="/like" method="post">
                 <input type="hidden" name="id" value={{r.id}} />
                 <input type="hidden" name="url" value={{request.path}} />
+                <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
                 <input type="image" src="/../static/kuvat/filled.png" width=30 height=30 name="submit" />
                 Poista tykkäys <br>
               </form>

@@ -13,6 +13,7 @@ height="100"/>
 <br>
 <form action="/change_pfp" method="POST" enctype="multipart/form-data">
     Vaihda kuva:  <input type="file" name="file">
+    <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
     <input type="submit" value="Lähetä">
     </form>
     
@@ -20,6 +21,7 @@ height="100"/>
 
 <form action="/delete_account" method="post">
     <input type="hidden" name="id" value={{session.id}} />
+    <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
     <input type="submit" value="POISTA TILI" onclick="return confirm('Haluatko varmasti poistaa käyttäjätilisi? Kaikki sisältö poistetaan.')" />
   </form>
 <br>

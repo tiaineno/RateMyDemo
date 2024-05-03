@@ -17,6 +17,7 @@
     <input type="file" name="file">
     <p>Kansikuva:<br>
     <input type="file" name="cover">
+    <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
     <input type="submit" value="Lataa julkaisu">
     </form>
 

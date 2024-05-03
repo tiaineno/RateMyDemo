@@ -21,6 +21,7 @@ height="200"/> <br>
     <form action="/delete_release" method="post">
       <input type="hidden" name="id" value={{id}} />
       <input type="hidden" name="path" value="/releases" />
+      <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
       <input type="submit" value="Poista julkaisu" onclick="return confirm('Haluatko varmasti poistaa tämän julkaisun?')" />
     </form><br>
   {% endif %}
@@ -29,6 +30,7 @@ height="200"/> <br>
   <form action="/like" method="post">
     <input type="hidden" name="id" value={{id}} />
     <input type="hidden" name="url" value={{request.path}} />
+    <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
     <input type="image" src="/../static/kuvat/filled.png" width=30 height=30 name="submit" />
     Poista tykkäys <br>
   </form>
@@ -36,6 +38,7 @@ height="200"/> <br>
   <form action="/like" method="post">
     <input type="hidden" name="id" value={{id}} />
     <input type="hidden" name="url" value={{request.path}} />
+    <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
     <input type="image" src="/../static/kuvat/empty.png" width=30 height=30 name="submit" />
     Tykkää <br>
   </form>
@@ -45,6 +48,7 @@ height="200"/> <br>
   <form action="/rate/{{id}}" method="POST">
     <input type="range" value={{rating}} name="rating" min="1" max="5" oninput="this.nextElementSibling.value = this.value">
     <output>{{rating}}</output>
+    <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
     <input type="submit" value="Tallenna">
   </form> <p>
 
@@ -56,12 +60,14 @@ height="200"/> <br>
     : <br>
     <form action="/review/{{id}}" method="POST">
         <textarea name="message" rows="5" cols="50" >{{review.content}}</textarea>
+        <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
         <input type="submit" value="Päivitä arvostelu">
         </form>
 
     <form action="/delete_review" method="post">
       <input type="hidden" name="id" value={{review.id}} />
       <input type="hidden" name="path" value={{request.path}} />
+      <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
       <input type="submit" value="Poista arvostelu" onclick="return confirm('Haluatko varmasti poistaa tämän arvostelun?')" />
     </form>
 
@@ -69,6 +75,7 @@ height="200"/> <br>
     Arvostele: <br>
     <form action="/review/{{id}}" method="POST">
         <textarea name="message" rows="5" cols="50"></textarea>
+        <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
         <input type="submit" value="Julkaise">
         </form>
   {% endif %}

@@ -45,6 +45,7 @@ Järjestä: <a href="/own_releases/title_desc">Nimi (laskeva)</a>
             <form action="/delete_release" method="post">
                 <input type="hidden" name="id" value={{r.id}} />
                 <input type="hidden" name="path" value="/own_releases/" />
+                <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
                 <input type="submit" value="Poista julkaisu" onclick="return confirm('Haluatko varmasti poistaa tämän julkaisun?')" />
               </form><br>
         </li>

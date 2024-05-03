@@ -1,5 +1,5 @@
 from app import app
-from flask import redirect, render_template, request, session
+from flask import redirect, render_template, request, session, abort
 import data, users
 
 #returns the home page
@@ -54,9 +54,6 @@ def register():
 #returns the account page
 @app.route("/account")
 def account():
-    id = None
-    if "id" in session:
-        id = session["id"]
     releases = data.own_releases(3, "id", "DESC")
     likes = data.likes()
     return render_template("/account.html", result=releases, likes=likes)
@@ -69,6 +66,8 @@ def show(source, id):
 #updates users profile picture
 @app.route("/change_pfp", methods = ["POST"])
 def change_pfp():
+    if session["csrf_token"] != request.form["csrf_token"]:
+        abort(403)
     file = request.files["file"]
     name = file.filename
     if not name.endswith((".jpg", ".png", ".jpeg")):
@@ -86,6 +85,8 @@ def upload():
         return render_template("/upload.html")
 
     if request.method == "POST":
+        if session["csrf_token"] != request.form["csrf_token"]:
+            abort(403)
         genre = request.form["genre"]
         title = request.form["title"]
         file = request.files["file"]
@@ -134,6 +135,8 @@ def release(id):
 #adds the new review to the database
 @app.route("/review/<int:id>", methods = ["POST"])
 def review(id):
+    if session["csrf_token"] != request.form["csrf_token"]:
+        abort(403)
     content = request.form["message"]
     data.review(content, id)
     return redirect(f"/release/{id}")
@@ -141,6 +144,8 @@ def review(id):
 #adds new rating to the database
 @app.route("/rate/<int:id>", methods = ["POST"])
 def rating(id):
+    if session["csrf_token"] != request.form["csrf_token"]:
+        abort(403)
     rating = request.form["rating"]
     data.rate(id, rating)
     return redirect(f"/release/{id}")
@@ -187,6 +192,8 @@ def reviews():
 #delete review if user is privileged to do that
 @app.route("/delete_review/", methods = ["POST"])
 def delete_review():
+    if session["csrf_token"] != request.form["csrf_token"]:
+        abort(403)
     review_id = request.form["id"]
     path = request.form["path"]
     if not data.delete_review(review_id):
@@ -196,6 +203,8 @@ def delete_review():
 #delete release if user is privileged to do that
 @app.route("/delete_release/", methods = ["POST"])
 def delete_release():
+    if session["csrf_token"] != request.form["csrf_token"]:
+        abort(403)
     release_id = request.form["id"]
     path = request.form["path"]
     if not data.delete_release(release_id):
@@ -205,6 +214,8 @@ def delete_release():
 #delete account if user is privileged to do that
 @app.route("/delete_account/", methods = ["POST"])
 def delete_account():
+    if session["csrf_token"] != request.form["csrf_token"]:
+        abort(403)
     user_id = request.form["id"]
     if session["id"] != int(user_id):
         return "Sinulla ei ole oikeutta tehdä tätä!"
@@ -214,6 +225,8 @@ def delete_account():
 #like or unlike release
 @app.route("/like", methods = ["POST"])
 def like():
+    if session["csrf_token"] != request.form["csrf_token"]:
+        abort(403)
     release_id = request.form["id"]
     url = request.form["url"]
     data.like(release_id)
