@@ -1,22 +1,21 @@
 {% extends "layout.html" %}
+
 {% block content %}
+    <title>Julkaise</title>
+    <h1>Julkaise</h1>
+    <br>
+    {{ error }}
 
-<title>Julkaise</title>
-<h1>Julkaise</h1>
-<br>
-{{ error }}
-
-<form action="/upload" method="POST" enctype="multipart/form-data">
-    <p>Julkaisun nimi:<br>
-    <input type="text" name="title"></p>
-    <p>Genre:<br>
-    <input type="text" name="genre"></p>
-    <p>Äänitiedosto:<br>
-    <input type="file" name="file">
-    <p>Kansikuva:<br>
-    <input type="file" name="cover">
-    <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
-    <input type="submit" value="Lataa julkaisu">
-    </form>
-
+    <form action="/upload" method="POST" enctype="multipart/form-data">
+        <p>Julkaisun nimi:<br>
+        <input type="text" name="title"></p>
+        <p>Genre:<br>
+        <input type="text" name="genre"></p>
+        <p>Äänitiedosto:<br>
+        <input type="file" name="file">
+        <p>Kansikuva:<br>
+        <input type="file" name="cover">
+        <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
+        <input type="submit" value="Lataa julkaisu">
+        </form>
 {% endblock %}

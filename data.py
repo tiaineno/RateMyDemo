@@ -1,6 +1,6 @@
 from sqlalchemy.sql import text
-from db import db
 from flask import make_response, session
+from db import db
 
 #return picture from database
 def pic(source, id):
@@ -38,7 +38,7 @@ def delete_release(id):
     user_id = db.session.execute(sql, {"id": id}).fetchone()[0]
     if user_id != session["id"]:
         return False
-    sql = text(f"""DELETE FROM releases WHERE id = :id""")
+    sql = text("DELETE FROM releases WHERE id = :id")
     db.session.execute(sql, {"id": id})
     db.session.commit()
     return True
@@ -64,9 +64,9 @@ def releases(limit, order, order2=""):
     if order2 not in ("ASC", "DESC", "asc", "desc"):
         order2 = ""
     
-    sql = text(f"""SELECT AVG(RA.rating) as rating, U.username as username, R.id as id, R.title as title, R.uploaded_at as date
-               FROM releases R LEFT JOIN users U ON R.user_id = U.id LEFT JOIN ratings RA ON RA.release_id=R.id
-               GROUP BY R.id, U.username, R.title ORDER BY {order} {order2} NULLS LAST LIMIT :limit""")
+    sql = text(f"""SELECT AVG(RA.rating) as rating, U.username as username, R.id as id, R.title as title,
+               R.uploaded_at as date FROM releases R LEFT JOIN users U ON R.user_id = U.id LEFT JOIN ratings RA ON
+               RA.release_id=R.id GROUP BY R.id, U.username, R.title ORDER BY {order} {order2} NULLS LAST LIMIT :limit""")
     releases_data = db.session.execute(sql, {"limit":limit})
     return releases_data
 
@@ -85,8 +85,8 @@ def own_releases(limit, order, order2=""):
 
 #return the data of one release
 def release(id):
-    sql = text("""SELECT R.user_id AS user_id, R.title AS title, R.genre AS genre, R.uploaded_at AS date, U.username AS username
-               FROM releases R, users U WHERE R.id = :id AND R.user_id = U.id""")
+    sql = text("""SELECT R.id as id, R.user_id AS user_id, R.title AS title, R.genre AS genre, R.uploaded_at AS date,
+               U.username AS username FROM releases R, users U WHERE R.id = :id AND R.user_id = U.id""")
     release_data = db.session.execute(sql, {"id":id})
     release_data = release_data.fetchone()
     return release_data
@@ -104,7 +104,7 @@ def rate(id, rating):
 
 #return average rating of one release
 def ratings(id):
-    sql = text(f"SELECT AVG(rating) FROM ratings WHERE release_id = :id")
+    sql = text("SELECT AVG(rating) FROM ratings WHERE release_id = :id")
     ratings = db.session.execute(sql, {"id": id})
     try:
         return ratings.fetchone()[0]
@@ -146,13 +146,13 @@ def delete_review(id):
 
 #return other users reviews and users own review in a tuple
 def reviews(release_id, user_id):
-    sql = text(f"""SELECT R.content as content, R.sent_at as sent_at, R.user_id as id, U.username as username
+    sql = text("""SELECT R.content as content, R.sent_at as sent_at, R.user_id as id, U.username as username
                FROM reviews R, users U WHERE R.release_id = :id AND R.user_id = U.id AND R.user_id <> :user_id""")
     reviews = db.session.execute(sql, {"id":release_id, "user_id":user_id})
     reviews = reviews.fetchall()
     review = None
     if user_id:
-        sql = text(f"""SELECT R.content as content, R.sent_at as sent_at, R.id as id
+        sql = text("""SELECT R.content as content, R.sent_at as sent_at, R.id as id
                 FROM reviews R WHERE R.user_id = :user_id AND R.release_id = :release_id""")
         review = db.session.execute(sql, {"user_id":user_id, "release_id":release_id})
         review = review.fetchone()
@@ -160,8 +160,8 @@ def reviews(release_id, user_id):
 
 #return users own reviews
 def reviews2(id):
-    sql = text(f"""SELECT R.content as content, R.sent_at as sent_at, R.id as review_id, R.release_id as id, Re.title as title
-               FROM reviews R, releases Re WHERE R.user_id = :id AND R.release_id = Re.id""")
+    sql = text("""SELECT R.content as content, R.sent_at as sent_at, R.id as review_id, R.release_id as id,
+               Re.title as title FROM reviews R, releases Re WHERE R.user_id = :id AND R.release_id = Re.id""")
     reviews = db.session.execute(sql, {"id":id})
     reviews = reviews.fetchall()
     return reviews

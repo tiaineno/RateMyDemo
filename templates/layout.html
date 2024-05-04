@@ -10,21 +10,21 @@
                 </a>
             </li>
             {% if session.id %}
-            <li>
-                <a href="/account">
-                    <img src="/show/pfp/{{ session.id }}" alt="PFP" width="20" height="20">
-                    <span>{{session.username}}</span>
-                </a>
-            </li>
-            <li>
-                <a href="/upload">Julkaise</a>
-            </li>
-            <li>
-                <a href="/library">Tykätyt julkaisut</a>
-            </li>
+                <li>
+                    <a href="/account">
+                        <img src="/show/pfp/{{ session.id }}" alt="PFP" width="20" height="20">
+                        <span>{{session.username}}</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="/upload">Julkaise</a>
+                </li>
+                <li>
+                    <a href="/library">Tykätyt julkaisut</a>
+                </li>
             {% else %}
-            <li> <a href="/login">Kirjaudu sisään</a> </li>
-            <li> <a href="/create_user">Luo tili</a> </li>
+                <li> <a href="/login">Kirjaudu sisään</a> </li>
+                <li> <a href="/create_user">Luo tili</a> </li>
             {% endif %}
             <li> <a href="/releases">Kaikki julkaisut</a> </li>
         </ul>

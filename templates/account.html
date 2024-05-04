@@ -1,84 +1,82 @@
 {% extends "layout.html" %}
+
 {% block content %}
+    <title>Oma tili</title>
+    <h1>Oma tili</h1>
 
-<title>Oma tili</title>
-<h1>Oma tili</h1>
+    {% if session.username %}
+        Olet kirjautunut nimellä {{ session.username }} <br>
+        <img src="/show/pfp/{{ session.id }}" alt="Profiilikuva"
+        width="100"
+        height="100"/>
+        <br>
+        <form action="/change_pfp" method="POST" enctype="multipart/form-data">
+            Vaihda kuva:  <input type="file" name="file">
+            <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
+            <input type="submit" value="Lähetä">
+        </form>
+            
+        <a href="/logout">Kirjaudu ulos</a> <br> <br>
 
-<p>
-{% if session.username %}
-Olet kirjautunut nimellä {{ session.username }} <br>
-<img src="/show/pfp/{{ session.id }}" alt="Profiilikuva"
-width="100"
-height="100"/>
-<br>
-<form action="/change_pfp" method="POST" enctype="multipart/form-data">
-    Vaihda kuva:  <input type="file" name="file">
-    <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
-    <input type="submit" value="Lähetä">
-    </form>
-    
-<a href="/logout">Kirjaudu ulos</a> <br> <br>
+        <form action="/delete_account" method="post">
+            <input type="hidden" name="id" value={{session.id}} />
+            <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
+            <input type="submit" value="POISTA TILI" onclick="return confirm('Haluatko varmasti poistaa käyttäjätilisi? Kaikki sisältö poistetaan.')" />
+        </form>
+        <br>
+        <a href="/account/reviews">Näytä omat arvostelusi</a>
+        <hr>
 
-<form action="/delete_account" method="post">
-    <input type="hidden" name="id" value={{session.id}} />
-    <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
-    <input type="submit" value="POISTA TILI" onclick="return confirm('Haluatko varmasti poistaa käyttäjätilisi? Kaikki sisältö poistetaan.')" />
-  </form>
-<br>
-<a href="/account/reviews">Näytä omat arvostelusi</a>
-<hr>
-
-<div class="container">
-    <div class="popular-releases">
-        <h2><a href="/library">Tykätyt julkaisut:</a></h2>
-        {% for r in likes %}
         <div class="container">
-            <div class="left">
-                <a href="/release/{{r.id}}"><img src="/show/cover/{{ r.id }}" alt={{r.title}}> </a> <br>
+            <div class="releases">
+                <h2><a href="/library">Tykätyt julkaisut:</a></h2>
+                {% for r in likes %}
+                    <div class="container">
+                        <div class="left">
+                            <a href="/release/{{r.id}}"><img src="/show/cover/{{ r.id }}" alt={{r.title}}> </a> <br>
+                        </div>
+                        <div class="right">
+                            <a href="/release/{{r.id}}">{{r.title}}<br>käyttäjältä {{r.username}}</a><br>
+                        </div>
+                    </div>
+                    {% if r.rating %}
+                        Pisteet: {{r.rating|round(1)}}/5 <br>
+                    {% else %}
+                        Ei pisteytetty <br>
+                    {% endif %} <hr>
+                {% endfor %}
+                <a href="/library">Näytä kaikki</a>
             </div>
-            <div class="right">
-                <a href="/release/{{r.id}}">{{r.title}}<br>käyttäjältä {{r.username}}</a><br>
+
+            <div class="releases">
+                <h2><a href="/own_releases/">Omat julkaisut:</a></h2>
+                
+                {% for r in result %}
+                    <div class="container">
+                        <div class="left">
+                            <a href="/release/{{r.id}}"> <img src="/show/cover/{{ r.id }}" alt={{r.title}} width="50" height="50"> </a>
+                        </div>
+                        <div class="right">
+                            <a href="/release/{{ r.id }}">{{ r.title }}
+                            {% if r.date %}
+                                <br>{{r.date.strftime("%Y-%m-%d")}}
+                            {%endif%}
+                            </a>
+                        </div>
+                    </div>
+                    {% if r.rating %}
+                        Pisteet: {{r.rating|round(1)}}/5 <br>
+                    {% else %}
+                        Ei pisteytetty <br>
+                    {% endif %} <hr>
+                {% endfor %}
+                <a href="/own_releases/">Näytä kaikki</a> <br>
             </div>
         </div>
-        {% if r.rating %}
-        Pisteet: {{r.rating|round(1)}}/5 <br>
-        {% else %}
-        Ei pisteytetty <br>
-        {% endif %} <hr>
-        {% endfor %}
-        <a href="/library">Näytä kaikki</a>
-    </div>
 
-    <div class="new-releases">
-        <h2><a href="/own_releases/">Omat julkaisut:</a></h2>
-        
-        {% for r in result %}
-            <div class="container">
-                <div class="left">
-                    <a href="/release/{{r.id}}"> <img src="/show/cover/{{ r.id }}" alt={{r.title}} width="50" height="50"> </a>
-                </div>
-                <div class="right">
-                    <a href="/release/{{ r.id }}">{{ r.title }}
-                    {% if r.date %}
-                    <br>{{r.date.strftime("%Y-%m-%d")}}
-                    {%endif%}
-                    </a>
-                </div>
-            </div>
-            {% if r.rating %}
-                Pisteet: {{r.rating|round(1)}}/5 <br>
-            {% else %}
-                Ei pisteytetty <br>
-            {% endif %} <hr>
-        {% endfor %}
-        <a href="/own_releases/">Näytä kaikki</a> <br>
-    </div>
-</div>
-
-{% else %}
-    Et ole kirjautunut sisään
-    <a href="/login">Kirjaudu sisään</a> tai
-    <a href="/create_user">Luo tili</a>
-{% endif %}
-
+    {% else %}
+        Et ole kirjautunut sisään
+        <a href="/login">Kirjaudu sisään</a> tai
+        <a href="/create_user">Luo tili</a>
+    {% endif %}
 {% endblock %}

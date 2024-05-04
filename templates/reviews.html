@@ -1,34 +1,32 @@
-{% extends "layout.html" %}
-{% block content %}
+    {% extends "layout.html" %}
+    {% block content %}
 
-<title>Omat arvostelut</title>
-<h1>Omat arvostelut</h1>
+    <title>Omat arvostelut</title>
+    <h1>Omat arvostelut</h1>
 
-{% if session.username %}
-{% for item in reviews %}
-<a href="/release/{{item.id}}"><img src="/show/cover/{{item.id}}" alt="Albumin kansi"
-width="50"
-height="50"/></a>
-Julkaisun <a href="/release/{{item.id}}">{{ item.title }}</a> arvostelusi
-{% if item.sent_at %}
-{{item.sent_at.strftime("%Y-%m-%d")}}
-{%endif%}
-:
-<div class="container">
-    {{ item.content }}
-</div>
-<form action="/delete_review" method="post">
-    <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
-    <input type="hidden" name="id" value={{item.review_id}} />
-    <input type="hidden" name="path" value={{request.path}} />
-    <input type="submit" value="Poista" onclick="return confirm('Haluatko varmasti poistaa tämän arvostelun?')"/>
-</form>
-<hr>
-{% endfor %}
-
-{% else %}
-<a href="/login">Kirjaudu sisään</a> tai
-<a href="/create_user">Luo tili</a>
-{% endif %}
-
+    {% if session.username %}
+        {% for item in reviews %}
+            <a href="/release/{{item.id}}"><img src="/show/cover/{{item.id}}" alt="Albumin kansi"
+            width="50"
+            height="50"/></a>
+            Julkaisun <a href="/release/{{item.id}}">{{ item.title }}</a> arvostelusi
+            {% if item.sent_at %}
+                {{item.sent_at.strftime("%Y-%m-%d")}}
+            {%endif%}
+            :
+            <div class="container">
+                {{ item.content }}
+            </div>
+            <form action="/delete_review" method="post">
+                <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
+                <input type="hidden" name="id" value={{item.review_id}} />
+                <input type="hidden" name="path" value={{request.path}} />
+                <input type="submit" value="Poista" onclick="return confirm('Haluatko varmasti poistaa tämän arvostelun?')"/>
+            </form>
+            <hr>
+        {% endfor %}
+    {% else %}
+        <a href="/login">Kirjaudu sisään</a> tai
+        <a href="/create_user">Luo tili</a>
+    {% endif %}
 {% endblock %}

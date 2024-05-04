@@ -1,110 +1,113 @@
 {% extends "layout.html" %}
+
 {% block content %}
+  <h1>Julkaisu</h1>
 
-<h1>Julkaisu</h1>
+  Julkaisu {{release_data.title}} käyttäjältä {{release_data.username}} <br>
+  <img src="/show/cover/{{release_data.id}}" alt="Albumin kansi"
+  width="200"
+  height="200"/> <br>
+  {% if release_data.date %}
+    Julkaistu: {{release_data.date.strftime("%Y-%m-%d")}} <br>
+  {%endif%}
 
-Julkaisu {{title}} käyttäjältä {{user}} <br>
-<img src="/show/cover/{{id}}" alt="Albumin kansi"
-width="200"
-height="200"/> <br>
-{% if date %}
-  Julkaistu: {{date.strftime("%Y-%m-%d")}} <br>
-{%endif%}
-
-<audio controls>
-    <source src="/audio/{{id}}" type="audio/mp3">
-  Your browser does not support the audio element.
-  </audio>
-
-{% if session.id %}
-  {% if session.id == user_id %}
-  <br>
-    <form action="/delete_release" method="post">
-      <input type="hidden" name="id" value={{id}} />
-      <input type="hidden" name="path" value="/releases" />
-      <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
-      <input type="submit" value="Poista julkaisu" onclick="return confirm('Haluatko varmasti poistaa tämän julkaisun?')" />
-    </form>
+  {% if release_data.genre %}
+    Genre: {{release_data.genre}} <br>
   {% endif %}
-  <hr>
-  {% if liked %}
-  <form action="/like" method="post">
-    <input type="hidden" name="id" value={{id}} />
-    <input type="hidden" name="url" value={{request.path}} />
-    <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
-    <input type="image" src="/../static/kuvat/filled.png" width=30 height=30 name="submit" />
-    <input type="submit" value="Poista tykkäys">
-  </form>
-  {%else%}
-  <form action="/like" method="post">
-    <input type="hidden" name="id" value={{id}} />
-    <input type="hidden" name="url" value={{request.path}} />
-    <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
-    <input type="image" src="/../static/kuvat/empty.png" width=30 height=30 name="submit" />
-    <input type="submit" value="Tykkää" >
-  </form>
-  {%endif%} 
 
-  Pisteytä: <br>
-  <form action="/rate/{{id}}" method="POST">
-    <input type="range" value={{rating}} name="rating" min="1" max="5" oninput="this.nextElementSibling.value = this.value">
-    <output>{{rating}}</output>
-    <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
-    <input type="submit" value="Tallenna">
-  </form> <p>
+  <audio controls>
+      <source src="/audio/{{release_data.id}}" type="audio/mp3">
+    Your browser does not support the audio element.
+    </audio>
 
-  {% if review.content %}
-    Arvostelusi
-    {% if review.sent_at %}
-      {{review.sent_at.strftime("%Y-%m-%d")}}
+  {% if session.id %}
+    {% if session.id == release_data.user_id %}
+    <br>
+      <form action="/delete_release" method="post">
+        <input type="hidden" name="id" value={{release_data.id}} />
+        <input type="hidden" name="path" value="/releases" />
+        <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
+        <input type="submit" value="Poista julkaisu" onclick="return confirm('Haluatko varmasti poistaa tämän julkaisun?')" />
+      </form>
     {% endif %}
-    : <br>
-    <form action="/review/{{id}}" method="POST">
-        <textarea name="message" rows="5" cols="50" >{{review.content}}</textarea>
-        <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
-        <input type="submit" value="Päivitä arvostelu">
-        </form>
-
-    <form action="/delete_review" method="post">
-      <input type="hidden" name="id" value={{review.id}} />
-      <input type="hidden" name="path" value={{request.path}} />
+    <hr>
+    {% if liked %}
+    <form action="/like" method="post">
+      <input type="hidden" name="id" value={{release_data.id}} />
+      <input type="hidden" name="url" value={{request.path}} />
       <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
-      <input type="submit" value="Poista arvostelu" onclick="return confirm('Haluatko varmasti poistaa tämän arvostelun?')" />
+      <input type="image" src="/../static/kuvat/filled.png" width=30 height=30 name="submit" />
+      <input type="submit" value="Poista tykkäys">
     </form>
+    {%else%}
+    <form action="/like" method="post">
+      <input type="hidden" name="id" value={{release_data.id}} />
+      <input type="hidden" name="url" value={{request.path}} />
+      <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
+      <input type="image" src="/../static/kuvat/empty.png" width=30 height=30 name="submit" />
+      <input type="submit" value="Tykkää" >
+    </form>
+    {%endif%} 
 
-  {% else %}
-    Arvostele: <br>
-    <form action="/review/{{id}}" method="POST">
-        <textarea name="message" rows="5" cols="50"></textarea>
+    Pisteytä: <br>
+    <form action="/rate/{{release_data.id}}" method="POST">
+      <input type="range" value={{rating}} name="rating" min="1" max="5" oninput="this.nextElementSibling.value = this.value">
+      <output>{{rating}}</output>
+      <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
+      <input type="submit" value="Tallenna">
+    </form> <p>
+
+    {% if review.content %}
+      Arvostelusi
+      {% if review.sent_at %}
+        {{review.sent_at.strftime("%Y-%m-%d")}}
+      {% endif %}
+      : <br>
+      <form action="/review/{{release_data.id}}" method="POST">
+          <textarea name="message" rows="5" cols="50" >{{review.content}}</textarea>
+          <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
+          <input type="submit" value="Päivitä arvostelu">
+          </form>
+
+      <form action="/delete_review" method="post">
+        <input type="hidden" name="id" value={{review.id}} />
+        <input type="hidden" name="path" value={{request.path}} />
         <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
-        <input type="submit" value="Julkaise">
-        </form>
-  {% endif %}
-{% else %}
-  <a href="/login">Kirjaudu sisään</a> pisteyttääksesi ja arvostellaksesi julkaisuja.
-{% endif %}
-<hr>
-Tykkäyksiä: {{likes}}<br> <br>
-Pisteytysten keskiarvo: <br>
-{% if ratings %}
-{{ratings|round(1)}}/5 <br>
-{%else%}
-Ei vielä pisteytyksiä <br>
-{%endif%}
-<br>
-Arvostelut: <br>
-{% for r in reviews %}
-  <img src="/show/pfp/{{ r.id }}" alt="Profiilikuva"
-  width="50"
-  height="50"/><br>
-  {{ r.username }}
-  {% if r.sent_at %}
-    {{r.sent_at.strftime("%Y-%m-%d")}}
-  {% endif %}
-  :<br>
-  <br>
-  {{r.content}}
-  <hr>
-{% endfor %} <br>
+        <input type="submit" value="Poista arvostelu" onclick="return confirm('Haluatko varmasti poistaa tämän arvostelun?')" />
+      </form>
 
+    {% else %}
+      Arvostele: <br>
+      <form action="/review/{{release_data.id}}" method="POST">
+          <textarea name="message" rows="5" cols="50"></textarea>
+          <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
+          <input type="submit" value="Julkaise">
+          </form>
+    {% endif %}
+  {% else %}
+    <br> <a href="/login">Kirjaudu sisään</a> pisteyttääksesi ja arvostellaksesi julkaisuja.
+  {% endif %}
+  <hr>
+  Tykkäyksiä: {{likes}}<br> <br>
+  Pisteytysten keskiarvo: <br>
+  {% if ratings %}
+    {{ ratings|round(1) }}/5 <br>
+  {%else%}
+    Ei vielä pisteytyksiä <br>
+  {%endif%}
+  <br>
+  <h3>Arvostelut:</h3> <br>
+  {% for r in reviews %}
+    <img src="/show/pfp/{{ r.id }}" alt="Profiilikuva"
+    width="50"
+    height="50"/><br>
+    {{ r.username }}
+    {% if r.sent_at %}
+      {{r.sent_at.strftime("%Y-%m-%d")}}
+    {% endif %}
+    :<br>
+    <br>
+    {{r.content}}
+    <hr>
+  {% endfor %} <br>
 {% endblock %}

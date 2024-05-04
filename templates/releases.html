@@ -1,53 +1,52 @@
 {% extends "layout.html" %}
+
 {% block content %}
+    <title>Kaikki julkaisut</title>
+    <h1>Kaikki julkaisut</h1>
+    <form action="/search" method="POST">
+        <p>Hae julkaisuja:<br>
+        <input type="text" name="query"></p>
+        <input type="submit" value="Hae">
+        </form>
+    <h2>Järjestä:</h2>
+    <a href="/releases/rating_desc">Pisteet (paras ensin)</a>, 
+    <a href="/releases/rating_asc">Pisteet (huonoin ensin)</a><br>
+    <a href="/releases/id_desc">Julkaisupäivä (uusin ensin)</a>, 
+    <a href="/releases/id_asc">Julkaisupäivä (vanhin ensin)</a><br>
+    <a href="/releases/title">Nimi (nouseva)</a>, 
+    <a href="/releases/title_desc">Nimi (laskeva)</a>
+    <hr>
 
-<title>Kaikki julkaisut</title>
-<h1>Kaikki julkaisut</h1>
-<form action="/search" method="POST">
-    <p>Hae julkaisuja:<br>
-    <input type="text" name="query"></p>
-    <input type="submit" value="Hae">
-    </form>
-<h2>Järjestä:</h2>
-<a href="/releases/rating_desc">Pisteet (paras ensin)</a>, 
-<a href="/releases/rating_asc">Pisteet (huonoin ensin)</a><br>
-<a href="/releases/id_desc">Julkaisupäivä (uusin ensin)</a>, 
-<a href="/releases/id_asc">Julkaisupäivä (vanhin ensin)</a><br>
-<a href="/releases/title">Nimi (nouseva)</a>, 
-<a href="/releases/title_desc">Nimi (laskeva)</a>
-<hr>
-
-<releases>
-    <ul>
-        {% for r in data %}
-        <li>
-            <div class="container">
-                <div class="left">
-                    <a href="/release/{{r.id}}"> <img src="/show/cover/{{ r.id }}" alt="Albumin kansi"
-                    width="100"
-                    height="100"/> </a>
-                </div>
-                <div class="right">
-                    {% if r.rating %}
-                    <a href="/release/{{r.id}}">{{r.title}}<br>Käyttäjältä {{r.username}}
-                        <br>Pisteet: {{r.rating|round(1)}}/5
-                        {% if r.date %}
-                        <br>{{r.date.strftime("%Y-%m-%d")}}
-                        {%endif%}
+    <releases>
+        <ul>
+            {% for r in data %}
+            <li>
+                <div class="container">
+                    <div class="left">
+                        <a href="/release/{{r.id}}"> <img src="/show/cover/{{ r.id }}" alt="Albumin kansi"
+                        width="100"
+                        height="100"/> </a>
+                    </div>
+                    <div class="right">
+                        {% if r.rating %}
+                        <a href="/release/{{r.id}}">{{r.title}}<br>Käyttäjältä {{r.username}}
+                            <br>Pisteet: {{r.rating|round(1)}}/5
+                            {% if r.date %}
+                            <br>{{r.date.strftime("%Y-%m-%d")}}
+                            {%endif%}
+                        </a>
+                        {% else %}
+                        <a href="/release/{{r.id}}">{{r.title}}<br>Käyttäjältä {{r.username}}
+                            <br>Ei pisteytetty
+                            {% if r.date %}
+                            <br>{{r.date.strftime("%Y-%m-%d")}}
+                            {%endif%}
+                        {% endif %}
                     </a>
-                    {% else %}
-                    <a href="/release/{{r.id}}">{{r.title}}<br>Käyttäjältä {{r.username}}
-                        <br>Ei pisteytetty
-                        {% if r.date %}
-                        <br>{{r.date.strftime("%Y-%m-%d")}}
-                        {%endif%}
-                    {% endif %}
-                </a>
+                    </div>
                 </div>
-            </div>
-        </li>
-        {% endfor %} <hr>
-    </ul>
-</releases>
-
+            </li>
+            {% endfor %}
+        </ul>
+    </releases>
 {% endblock %}

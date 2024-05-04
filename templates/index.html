@@ -1,74 +1,73 @@
 {% extends "layout.html" %}
+
 {% block content %}
+    <title>Etusivu</title>
+    <h1>Etusivu</h1>
 
-<title>Etusivu</title>
-<h1>Etusivu</h1>
+    <div class="container">
+        <div class="left">
+            {% if session.username %}
+                Hei {{session.username}} <br>
+                Tervetuloa <br>
+                RateMyDemoon! <br> <br>
 
-<div class="container">
-    <div class="left">
-        {% if session.username %}
-        Hei {{session.username}} <br>
-        Tervetuloa <br>
-        RateMyDemoon! <br> <br>
-
-        <a href="/account"> <img src="/show/pfp/{{ session.id }}" alt="Profiilikuva"
-        width="80"
-        height="80"> </a>
-        {% else %}
-        Tervetuloa <br>
-        RateMyDemoon! <br> <br>
-        <a href="/login">kirjaudu sisään</a> <br>
-        <a href="/create_user">luo tili</a> <br>
-        {% endif %}
-    </div>
-    <div class="right">
-        <img src="static/kuvat/logo.png" alt="RMD logo"
-        width="150"
-        height="150">
-    </div>
-</div>  
-<hr>
-
-<div class="container">
-    <div class="popular-releases">
-        <a href="/releases" > <h2>Suosituimmat julkaisut:</h2> </a>
-        {% for r in most_popular %}
-        <div class="container">
-            <div class="left">
-                <a href="/release/{{r.id}}"> <img src="/show/cover/{{ r.id }}" alt="Albumin kansi"> </a>
-            </div>
-            <div class="right">
-                <a href="/release/{{r.id}}">{{r.title}}<br>käyttäjältä {{r.username}}</a><br>
-            </div>
+                <a href="/account"> <img src="/show/pfp/{{ session.id }}" alt="Profiilikuva"
+                width="80"
+                height="80"> </a>
+                {% else %}
+                Tervetuloa <br>
+                RateMyDemoon! <br> <br>
+                <a href="/login">kirjaudu sisään</a> <br>
+                <a href="/create_user">luo tili</a> <br>
+            {% endif %}
         </div>
-        {% if r.rating %}
-        Pisteet: {{r.rating|round(1)}}/5 <br>
-        {% else %}
-        Ei pisteytetty <br>
-        {% endif %} <hr>
-        {% endfor %}
-        <a href="/releases">Näytä kaikki</a>
-    </div>
-
-    <div class="new-releases">
-        <a href="/releases/id_desc"> <h2>Uusimmat julkaisut:</h2> </a>
-        {% for r in releases %}
-        <div class = "container">
-            <div class="left">
-                <a href="/release/{{r.id}}"> <img src="/show/cover/{{ r.id }}" alt="Albumin kansi"> </a>
-            </div>
-            <div class="right">
-                <a href="/release/{{r.id}}">{{r.title}}<br>käyttäjältä {{r.username}}</a><br>
-            </div>
+        <div class="right">
+            <img src="static/kuvat/logo.png" alt="RMD logo"
+            width="150"
+            height="150">
         </div>
-        {% if r.rating %}
-        Pisteet: {{r.rating|round(1)}}/5 <br>
-        {% else %}
-        Ei pisteytetty <br>
-        {% endif %} <hr>
-        {% endfor %}
-        <a href="/releases/id_desc">Näytä kaikki</a> <br>
-    </div>
-</div>
+    </div>  
+    <hr>
 
+    <div class="container">
+        <div class="releases">
+            <a href="/releases" > <h2>Suosituimmat julkaisut:</h2> </a>
+            {% for r in most_popular %}
+                <div class="container">
+                    <div class="left">
+                        <a href="/release/{{r.id}}"> <img src="/show/cover/{{ r.id }}" alt="Albumin kansi"> </a>
+                    </div>
+                    <div class="right">
+                        <a href="/release/{{r.id}}">{{r.title}}<br>käyttäjältä {{r.username}}</a><br>
+                    </div>
+                </div>
+                {% if r.rating %}
+                    Pisteet: {{r.rating|round(1)}}/5 <br>
+                {% else %}
+                    Ei pisteytetty <br>
+                {% endif %} <hr>
+            {% endfor %}
+            <a href="/releases">Näytä kaikki</a>
+        </div>
+
+        <div class="releases">
+            <a href="/releases/id_desc"> <h2>Uusimmat julkaisut:</h2> </a>
+            {% for r in releases %}
+                <div class = "container">
+                    <div class="left">
+                        <a href="/release/{{r.id}}"> <img src="/show/cover/{{ r.id }}" alt="Albumin kansi"> </a>
+                    </div>
+                    <div class="right">
+                        <a href="/release/{{r.id}}">{{r.title}}<br>käyttäjältä {{r.username}}</a><br>
+                    </div>
+                </div>
+                {% if r.rating %}
+                    Pisteet: {{r.rating|round(1)}}/5 <br>
+                {% else %}
+                    Ei pisteytetty <br>
+                {% endif %} <hr>
+            {% endfor %}
+            <a href="/releases/id_desc">Näytä kaikki</a> <br>
+        </div>
+    </div>
 {% endblock %}

@@ -1,6 +1,7 @@
 from app import app
 from flask import redirect, render_template, request, session, abort
-import data, users
+import data
+import users
 
 #returns the home page
 @app.route("/")
@@ -13,15 +14,14 @@ def index():
 @app.route("/login", methods=["GET", "POST"])
 def login():
     if request.method == "GET":
-        return render_template("login.html") 
+        return render_template("login.html")
     if request.method == "POST":
         username = request.form["username"]
         password = request.form["password"]
         if users.login(username, password):
             return redirect("/")
-        else:
-            return render_template("login.html", error="Väärä käyttäjätunnus tai salasana")
-        
+        return render_template("login.html", error="Väärä käyttäjätunnus tai salasana")
+
 # Handles user logout and returns the home page
 @app.route("/logout")
 def logout():
@@ -33,7 +33,7 @@ def logout():
 def register():
     if request.method == "GET":
         return render_template("create_user.html")
-    
+
     if request.method == "POST":
         username = request.form["username"]
         password = request.form["password"]
@@ -43,19 +43,18 @@ def register():
             return render_template("create_user.html", error="Liian pitkä käyttäjätunnus!")
         if len(password)>100:
             return render_template("create_user.html", error="Liian pitkä käyttäjätunnus!")
-        
+
         name = file.filename
         if not name.endswith((".jpg", ".png", ".jpeg")) and name!="":
             return render_template("/create_user.html", error="Kuvan täytyy olla jpg tai png muodossa!")
         d = file.read()
         if len(d) > 10000*1024:
-            return render_template("/create_user.html", error="Liian suuri kuvatiedosto!")
-        
+            return render_template("/create_user.html", error="Liian suuri kuvatiedosto! (Max 10mb)")
+
         if users.register(username, password, d):
             return redirect("/account")
-        else:
-            return render_template("create_user.html", error="Käyttäjätunnus on jo olemassa")
-        
+        return render_template("create_user.html", error="Käyttäjätunnus on jo olemassa")
+
 #returns the account page
 @app.route("/account")
 def account():
@@ -78,8 +77,8 @@ def change_pfp():
     if not name.endswith((".jpg", ".png", ".jpeg")):
         return render_template("/upload.html", error="Kuvan täytyy olla jpg tai png muodossa!")
     d = file.read()
-    if len(d) > 10000*1024:
-        return render_template("/upload.html", error="Liian suuri kuvatiedosto!")
+    if len(d) > 10**7:
+        return render_template("/upload.html", error="Liian suuri kuvatiedosto! Max 10mb!")
     users.change_pfp(d)
     return redirect("/account")
 
@@ -101,17 +100,17 @@ def upload():
         if not name.endswith((".jpg", ".png", ".jpeg")):
             return render_template("/upload.html", error="Kuvan täytyy olla jpg tai png muodossa!")
         cover = cover.read()
-        if len(cover) > 10000*1024:
+        if len(cover) > 10**7:
             return render_template("/upload.html", error="Liian suuri kuvatiedosto!")
-        
+
         name = file.filename
         if not name.endswith((".mp3", ".wav")):
             return render_template("/upload.html", error="Äänitiedoston täytyy olla mp3 tai wav muodossa!")
         file = file.read()
         print(len(file))
         if len(file) > 10**8:
-            return render_template("upload.html", error="Liian suuri äänitiedosto! Maksimi on 100MB!")
-        
+            return render_template("upload.html", error="Liian suuri äänitiedosto! Max 100mb!")
+
         if not title:
             return render_template("/upload.html", error="Syötä julkaisun nimi")
 
@@ -139,7 +138,8 @@ def release(id):
     reviews = reviews[0]
     ratings = data.ratings(id)
     rating = data.own_rating(id)
-    return render_template("/release.html", id=id, title=release_data.title, genre=release_data.genre, user=release_data.username, reviews=reviews, ratings=ratings, review=review, date=release_data.date, user_id=release_data.user_id, rating=rating, liked=liked, likes=likes)
+    return render_template("/release.html", release_data=release_data, reviews=reviews, review=review,
+                           ratings=ratings, rating=rating, liked=liked, likes=likes)
 
 #adds the new review to the database
 @app.route("/review/<int:id>", methods = ["POST"])
@@ -148,7 +148,8 @@ def review(id):
         abort(403)
     content = request.form["message"]
     if len(content) > 100000 or len(content) == 0:
-        return render_template(f"/release/{id}", error="Arvostelun täytyy olla 1-99999 merkkiä pitkä!")
+        return render_template(f"/release/{id}",
+                               error="Arvostelun täytyy olla 1-99999 merkkiä pitkä!")
     data.review(content, id)
     return redirect(f"/release/{id}")
 

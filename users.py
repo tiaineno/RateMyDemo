@@ -1,8 +1,8 @@
-from db import db
+import secrets
 from flask import session
 from sqlalchemy.sql import text
 from werkzeug.security import check_password_hash, generate_password_hash
-import secrets
+from db import db
 
 def login(username, password):
     sql = text("SELECT id, password FROM users WHERE username = :username")
@@ -18,7 +18,6 @@ def login(username, password):
         session["id"] = user_id
         session["csrf_token"] = secrets.token_hex(16)
         return True
-    
     return False
 
 def logout():
