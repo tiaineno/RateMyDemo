@@ -1,24 +1,18 @@
-RateMyDemo on sivusto, jossa muusikot voivat ladata demojaan tai julkaisujaan muiden kuunneltavaksi.
-Oleellinen osa sivustoa on mahdollisuus arvioida näitä julkaisuja, jolloin käyttäjät voivat hakea esimerkiksi suosituimmat julkaisut sivustolta mm. genren tai julkaisuvuoden mukaan.
-Sivustolla sekä artistit, että tavalliset käyttäjät käyttävät samanlaista käyttäjätiliä, joten kuka tahansa voi ladata musiikkiaan ja arvostella muiden musiikkia.
+Sovelluksen testaaminen: https://ratemydemo.fly.dev/
 
-Tällä hetkellä sivustolla on mahdollisuus luoda käyttäjätili ja kirjautua sisään, julkaista äänitiedostoja sekä kuunnella ja arvostella muiden julkaisuja. Julkaisuja voi selata lajittelemalla ne eri tavoin, tai hakemalla niitä lataajan käyttäjänimen tai julkaisun nimen perusteella.
+Esittely
 
-Projekti on css teemaa, sekä muutamaa ominaisuutta vaille valmis.
+    RateMyDemo on sivusto, jossa muusikot voivat ladata demojaan tai julkaisujaan muiden kuunneltavaksi. Oleellinen osa sivustoa on mahdollisuus arvioida näitä julkaisuja, jolloin käyttäjät voivat hakea esimerkiksi suosituimmat julkaisut sivustolta mm. genren tai julkaisuvuoden mukaan. Sivustolla sekä artistit, että tavalliset käyttäjät käyttävät samanlaista käyttäjätiliä, joten kuka tahansa voi ladata musiikkiaan ja arvostella muiden musiikkia.
 
-Ohjeet sivuston testaamiseen paikallisesti (olettaen, että Postgresql on jo valmiiksi asennettu ja toiminnassa):
+Toiminnallisuudet
 
-Lataa tämä repo tietokoneellesi ja navigoi sen juurikansioon
+    Julkaisujen selaaminen
+        Etusivu näyttää kolme uusinta sekä 3 suosituinta julkaisua. Kaikki julkaisut-sivulla julkaisuja voi lajitella eri kriteerein tai hakea lataajan tai julkaisun nimen mukaan.
+    
+    Julkaisun toiminnot
+        Kaikki käyttäjät voivat kuunnella julkaisuja ja nähdä niiden pisteytyksen, arvostelut sekä tykkäysten määrän Rekisteröitynyt käyttäjä voi tykätä, arvostella sekä pisteyttää julkaisuja.
 
-Kirjoita nämä komennot terminaaliin:
-$ python3 -m venv venv
-$ source venv/bin/activate (käynnistää virtuaaliympäristön)
-$ pip install -r ./requirements.txt (asentaa vaaditut kirjastot)
-$ psql < schema.sql (luo vaaditut taulut tietokantaan)
-
-Luo .env tiedosto ja määritä sen sisältö näin:
-DATABASE_URL=<tietokannan-paikallinen-osoite>
-SECRET_KEY=<salainen-avain>
-
-Käynnistä sovellus komennolla:
-$ flask run
+    Käyttäjän omat toiminnot
+        Oma tili-sivulta käyttäjä pääsee käsiksi kaikkiin arvosteluihinsa, tykkäämiinsä julkaisuhin sekä omiin julkaisuihin.Tätä kautta myös arvostelun, tykkäyksen tai julkaisun poisto onnistuu nopeasti. Käyttäjä voi myös vaihtaa profiilikuvaansa tai poistaa tilinsä.
+        
+        Yläpalkin kautta käyttäjät voivat ladata julkaisuja.
