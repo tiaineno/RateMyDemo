@@ -13,14 +13,14 @@ def index():
 @app.route("/login", methods=["GET", "POST"])
 def login():
     if request.method == "GET":
-        return render_template("login.html", v = False) 
+        return render_template("login.html") 
     if request.method == "POST":
         username = request.form["username"]
         password = request.form["password"]
         if users.login(username, password):
             return redirect("/")
         else:
-            return render_template("login.html", v = True)
+            return render_template("login.html", error="Väärä käyttäjätunnus tai salasana")
         
 # Handles user logout and returns the home page
 @app.route("/logout")
@@ -39,6 +39,11 @@ def register():
         password = request.form["password"]
         file = request.files["file"]
 
+        if len(username)>25:
+            return render_template("create_user.html", error="Liian pitkä käyttäjätunnus!")
+        if len(password)>100:
+            return render_template("create_user.html", error="Liian pitkä käyttäjätunnus!")
+        
         name = file.filename
         if not name.endswith((".jpg", ".png", ".jpeg")) and name!="":
             return render_template("/create_user.html", error="Kuvan täytyy olla jpg tai png muodossa!")
@@ -95,18 +100,22 @@ def upload():
         name = cover.filename
         if not name.endswith((".jpg", ".png", ".jpeg")):
             return render_template("/upload.html", error="Kuvan täytyy olla jpg tai png muodossa!")
-        d = cover.read()
-        if len(d) > 10000*1024:
+        cover = cover.read()
+        if len(cover) > 10000*1024:
             return render_template("/upload.html", error="Liian suuri kuvatiedosto!")
         
         name = file.filename
         if not name.endswith((".mp3", ".wav")):
             return render_template("/upload.html", error="Äänitiedoston täytyy olla mp3 tai wav muodossa!")
+        file = file.read()
+        print(len(file))
+        if len(file) > 10**8:
+            return render_template("upload.html", error="Liian suuri äänitiedosto! Maksimi on 100MB!")
         
         if not title:
             return render_template("/upload.html", error="Syötä julkaisun nimi")
 
-        result = data.upload(file, d, title, genre)
+        result = data.upload(file, cover, title, genre)
         return redirect(f"/release/{result.fetchone()[0]}")
 
 #returns the audio file
@@ -138,6 +147,8 @@ def review(id):
     if session["csrf_token"] != request.form["csrf_token"]:
         abort(403)
     content = request.form["message"]
+    if len(content) > 100000 or len(content) == 0:
+        return render_template(f"/release/{id}", error="Arvostelun täytyy olla 1-99999 merkkiä pitkä!")
     data.review(content, id)
     return redirect(f"/release/{id}")
 
@@ -168,6 +179,8 @@ def releases(order):
 @app.route("/search", methods = ["POST"])
 def search():
     query = request.form["query"]
+    if len(query) > 10000:
+        return ("Liian pitkä hakutermi :(")
     return redirect(f"/releases/{query}/id")
 
 #returns the result of the search

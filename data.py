@@ -25,11 +25,10 @@ def audio(id):
 
 #insert new release data into database
 def upload(file, cover, title, genre):
-    data = file.read()
     user_id = session["id"]
     sql = text("""INSERT INTO releases(user_id, title, genre, data, cover, uploaded_at)
                VALUES (:user_id, :title, :genre, :data, :cover, NOW()) RETURNING id""")
-    result = db.session.execute(sql, {"user_id": user_id, "title": title, "genre": genre, "data": data, "cover":cover})
+    result = db.session.execute(sql, {"user_id": user_id, "title": title, "genre": genre, "data": file, "cover":cover})
     db.session.commit()
     return result
 
