@@ -1,3 +1,6 @@
 __pycache__
 venv
 .env
+psycopg2
+[2a09:8280:1:f28:246e:d6a:949:dbbf]:443:
+.dockerignore
